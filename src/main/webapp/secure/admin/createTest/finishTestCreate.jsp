@@ -1,0 +1,55 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="entity.Test" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Test Saved - TesterQuiz</title>
+    <link rel="stylesheet" href="../../../styles.css">
+</head>
+<body>
+<div class="page page--success">
+    <header class="header header--auth">
+        <h1 class="header__title">Success!</h1>
+        <p class="header__subtitle">Your test has been saved</p>
+    </header>
+
+    <main class="main">
+        <div class="success-container">
+            <div class="success-icon">
+                <span class="icon-large">✅</span>
+            </div>
+
+
+
+            <div class="test-summary">
+                <h2 class="test-name">"${sessionScope.currentTest.title}"</h2>
+                <div class="test-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Topic:</span>
+                        <span class="detail-value">${sessionScope.currentTest.topic}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Total Questions:</span>
+                        <span class="detail-value">${sessionScope.currentTest.questions.size()}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-message">
+                <p>Your test has been successfully saved to the system.</p>
+                <p>Users can now access and take this test.</p>
+            </div>
+
+            <div class="action-buttons">
+                <a href="${pageContext.request.contextPath}/secure/menu.jsp" class="btn btn--large btn--primary">
+                    Return to menu
+                </a>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
