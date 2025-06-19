@@ -54,7 +54,7 @@
         var allTests = [];
 
         function loadTests() {
-            fetch('/tests')
+            fetch('/secure/tests')
                 .then(function (response) {
                     return response.json();
                 })
@@ -80,18 +80,18 @@
                 var questionCount = test.questions ? test.questions.length : 0;
 
                 var actionsHTML = '<div class="test-actions">' +
-                    '<form class="action-form" action="/WelcomeToTheTestServlet" method="get">' +
+                    '<form class="action-form" action="/secure/WelcomeToTheTestServlet" method="get">' +
                     '<input type="hidden" name="id" value="' + test.id + '">' +
                     '<button type="submit" class="btn btn-start">Start</button>' +
                     '</form>';
                 
                 if (isAdmin) {
-                    actionsHTML += '<form class="action-form" action="/tests/' + test.id + '" method="post">' +
+                    actionsHTML += '<form class="action-form" action="/secure/tests/' + test.id + '" method="post">' +
                         '<input type="hidden" name="_method" value="PUT">' +
                         '<button type="submit" class="btn btn-edit">Edit</button>' +
                         '</form>';
-                    
-                    actionsHTML += '<form class="action-form" action="/tests/' + test.id + '" method="post">' +
+
+                    actionsHTML += '<form class="action-form" action="/secure/tests/' + test.id + '" method="post">' +
                         '<input type="hidden" name="_method" value="DELETE">' +
                         '<button type="submit" class="btn btn-delete" onclick="return confirm(\'Are you sure you want to delete this test?\')">Delete</button>' +
                         '</form>';

@@ -12,6 +12,7 @@ import java.io.IOException;
 public class MenuServlet extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        clearSessionData(req);
         forwardTo(req, resp, ServletPaths.MENU_JSP);
     }
 }

@@ -29,7 +29,7 @@
             </div>
 
             <div>
-                <form action="/startTest" method="post" class="start-test-button">
+                <form action="/secure/startTest" method="post" class="start-test-button">
                     <button type="submit" class="btn btn--primary btn--full">Start Test</button>
                 </form>
             </div>

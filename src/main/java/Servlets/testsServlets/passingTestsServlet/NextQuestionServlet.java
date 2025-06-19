@@ -46,7 +46,6 @@ public class NextQuestionServlet extends BaseServlet {
                     redirectTo(resp, ServletPaths.PASSING_TEST_JSP);
 
                 } else if (resultDTO != null) {
-                    resultService.saveResult(resultDTO, getRealPath(req, WEB_INF_DATA_TEST_RESULTS));
                     session.setAttribute("result", resultDTO);
                     redirectTo(resp, ServletPaths.TEST_END_RESULT_JSP);
                 }

@@ -18,6 +18,7 @@ public class Result {
     private UUID id;
     private UUID user_id;
     private UUID test_id;
+    private String testTitle;
     private Integer score;
     private LocalDateTime date;
     private List<ResultAnswer> resultAnswers;
@@ -30,6 +31,7 @@ public class Result {
                 .test_id(test_id)
                 .score(score)
                 .date(date)
+                .testTitle(testTitle)
                 .resultAnswers(resultAnswers.stream()
                         .map(ResultAnswer::toDTO)
                         .toList())

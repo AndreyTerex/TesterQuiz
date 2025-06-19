@@ -2,15 +2,14 @@ package Services;
 
 import dao.ResultDao;
 import dto.ResultDTO;
+import dto.TestDTO;
+import dto.TestStatsDTO;
 import entity.*;
-import jakarta.servlet.ServletContext;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ResultService {
     private final ResultDao resultDao;
@@ -29,6 +28,7 @@ public class ResultService {
                 .test_id(test.getId())
                 .resultAnswers(new ArrayList<ResultAnswer>())
                 .date(startTime)
+                .testTitle(test.getTitle())
                 .build();
     }
 
@@ -61,5 +61,54 @@ public class ResultService {
 
         result.setScore(score);
         return result;
+    }
+
+    public List<ResultDTO> getAllResultsByUserId(UUID id) throws IOException {
+       return resultDao.getAllResultsByUserId(id).stream()
+                .map(Result::toDTO)
+                .collect(Collectors.toList());
+
+    }
+
+    public ResultDTO findById(String id) throws IOException {
+        Result result = resultDao.findById(UUID.fromString(id));
+        return result != null ? result.toDTO() : null;
+    }
+
+    public List<TestStatsDTO> getStats(List<TestDTO> allTestsDTO) throws IOException {
+        List<Result> results = resultDao.findAll();
+        List<TestStatsDTO> testStatsDTOList = new ArrayList<>();
+        for (TestDTO testDTO : allTestsDTO) {
+            String testTitle = testDTO.getTitle();
+            Integer totalQuestions = testDTO.getQuestions().size();
+            Integer totalPassed = results.stream().filter(r -> r.getTest_id().equals(testDTO.getId())).toList().size();
+            Optional<Result> maxOptional = results.stream().filter(r -> r.getTest_id().equals(testDTO.getId())).max(Comparator.comparingInt(Result::getScore));
+            Integer maxScore = maxOptional.isPresent() ? maxOptional.get().getScore() :0;
+            Optional<Result> min = results.stream().min((r1, r2) -> r2.getDate().compareTo(r1.getDate()));
+            LocalDateTime lastPassed = min.map(Result::getDate).orElse(null);
+            TestStatsDTO testStatsDTO = TestStatsDTO.builder()
+                    .testTitle(testTitle)
+                    .totalQuestions(totalQuestions)
+                    .totalPassed(totalPassed)
+                    .maxScore(maxScore)
+                    .lastPassed(lastPassed)
+                    .build();
+
+            testStatsDTOList.add(testStatsDTO);
+        }
+        return testStatsDTOList;
+
+    }
+
+
+    private List<Result> findAllResultsByTestId(UUID testId, List<Result> results) {
+        return results.stream()
+                .filter(result -> result.getTest_id().equals(testId))
+                .toList();
+
+    }
+
+    public Integer countAttempts() throws IOException {
+        return resultDao.findAll().size();
     }
 }

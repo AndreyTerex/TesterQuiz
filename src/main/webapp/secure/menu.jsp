@@ -35,6 +35,11 @@
           <h3 class="menu-card__title">Take Test</h3>
           <p class="menu-card__description">Browse and take available tests</p>
         </a>
+        <a href="/secure/results" class="menu-card">
+          <div class="menu-card__icon">📊</div>
+          <h3 class="menu-card__title">My Tests History</h3>
+          <p class="menu-card__description">View result test history</p>
+        </a>
 
         <c:if test="${sessionScope.user.role eq 'ADMIN'}">
           <a href="/secure/admin/createTest/createTestStart.jsp" class="menu-card">
@@ -42,19 +47,9 @@
             <h3 class="menu-card__title">Add Test</h3>
             <p class="menu-card__description">Create new tests</p>
           </a>
-          <a href="/secure/admin/updateTest" class="menu-card">
-            <div class="menu-card__icon">✏️</div>
-            <h3 class="menu-card__title">Update Test</h3>
-            <p class="menu-card__description">Modify existing tests</p>
-          </a>
-          <a href="/secure/admin/deleteTest" class="menu-card">
-            <div class="menu-card__icon">🗑️</div>
-            <h3 class="menu-card__title">Delete Test</h3>
-            <p class="menu-card__description">Remove tests</p>
-          </a>
           <a href="/secure/admin/stats" class="menu-card">
             <div class="menu-card__icon">📊</div>
-            <h3 class="menu-card__title">Statistics</h3>
+            <h3 class="menu-card__title">Admin Statistics</h3>
             <p class="menu-card__description">View test statistics</p>
           </a>
         </c:if>

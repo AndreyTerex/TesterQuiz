@@ -41,7 +41,7 @@
       <c:remove var="success" scope="session"/>
     </c:if>
 
-      <form action="/tests" method="post" class="form">
+      <form action="/secure/tests" method="post" class="form">
       <input type="hidden" name="_method" value="PATCH">
 
       <div class="form__group">

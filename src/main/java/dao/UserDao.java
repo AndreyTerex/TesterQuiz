@@ -17,7 +17,9 @@ public class UserDao {
      * Находит пользователя по имени пользователя
      */
     public Optional<User> findByUsername(String username) throws IOException {
-        return baseDao.findAll().stream().filter(user -> user.getUsername().equals(username)).findFirst();
+        return baseDao.findAll().stream()
+                .filter(user -> user.getUsername().equals(username))
+                .findFirst();
     }
 
     /**
@@ -31,6 +33,9 @@ public class UserDao {
      * Находит пользователя по уникальному идентификатору
      */
     public User findById(UUID uuid) throws IOException {
-        return baseDao.findAll().stream().filter(user -> user.getId().equals(uuid)).findFirst().orElse(null);
+        return baseDao.findAll().stream()
+                .filter(user -> user.getId().equals(uuid))
+                .findFirst()
+                .orElse(null);
     }
 }

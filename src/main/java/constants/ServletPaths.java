@@ -10,11 +10,10 @@ public interface ServletPaths {
     String REGISTER_PATH = "/register";
     String LOGOUT_PATH = "/logout";
     String MENU_PATH = "/secure/menu";
-    String TESTS_PATTERN_PATH = "/tests/*";
-    String START_TEST_PATH = "/startTest";
-    String NEXT_QUESTION_PATH = "/nextQuestion";
-    String WELCOME_TO_TEST_PATH = "/WelcomeToTheTestServlet";
-    String EDIT_TEST_SESSION_PATH = "/editTestSession";
+    String TESTS_PATTERN_PATH = "/secure/tests/*";
+    String START_TEST_PATH = "/secure/startTest";
+    String NEXT_QUESTION_PATH = "/secure/nextQuestion";
+    String WELCOME_TO_TEST_PATH = "/secure/WelcomeToTheTestServlet";
     
     // JSP страницы
     String LOGIN_JSP = "/login.jsp";

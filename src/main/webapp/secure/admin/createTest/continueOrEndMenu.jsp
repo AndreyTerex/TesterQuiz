@@ -60,14 +60,16 @@
         </div>
 
         <div class="choice-option">
-          <a href="${pageContext.request.contextPath}/secure/admin/createTest/finishTestCreate.jsp"
-             class="btn btn--large btn--success">
-            <span class="btn-icon">✅</span>
-            <span class="btn-text">
-              <strong>Finish Test</strong>
-              <small>Save and publish</small>
-            </span>
-          </a>
+          <form action="${pageContext.request.contextPath}/secure/admin/editTest" method="post">
+            <input type="hidden" name="action" value="finish">
+            <button type="submit" class="btn btn--large btn--success">
+              <span class="btn-icon">✅</span>
+              <span class="btn-text">
+                <strong>Finish Test</strong>
+                <small>Save and publish</small>
+              </span>
+            </button>
+          </form>
         </div>
       </div>
 

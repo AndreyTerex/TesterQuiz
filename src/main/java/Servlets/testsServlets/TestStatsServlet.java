@@ -1,0 +1,26 @@
+package Servlets.testsServlets;
+
+import Servlets.BaseServlet;
+import dto.TestDTO;
+import dto.TestStatsDTO;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.List;
+
+@WebServlet(urlPatterns = "/secure/admin/stats")
+public class TestStatsServlet extends BaseServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<TestDTO> allTestsDTO = testService.findAllTestsDTO();
+        List<TestStatsDTO> stats = resultService.getStats(allTestsDTO);
+        Integer attempts = resultService.countAttempts();
+        req.setAttribute("stats", stats);
+        req.setAttribute("attempts", attempts);
+        req.getRequestDispatcher("/secure/admin/adminStatisticPage.jsp").forward(req, resp);
+
+    }
+}

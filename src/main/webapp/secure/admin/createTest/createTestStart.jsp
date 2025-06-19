@@ -29,7 +29,7 @@
             <c:remove var="success" scope="session"/>
         </c:if>
 
-        <form action="/tests" method="post" class="form">
+        <form action="/secure/tests" method="post" class="form">
             <div class="form__group">
                 <label for="title" class="form__label">Test title</label>
                 <input id="title" name="title" type="text" required class="form__control"

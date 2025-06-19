@@ -28,17 +28,17 @@
       <c:remove var="success" scope="session"/>
     </c:if>
 
-    <form action="/tests" method="post" class="form">
+    <form action="/secure/admin/editTest" method="post" class="form">
       <input type="hidden" name="_method" value="PUT">
       <div class="form__group">
         <label for="title" class="form__label">New Test title</label>
-        <input id="title" name="title" type="text" required class="form__control"
+        <input id="title" name="title" type="text" class="form__control"
                placeholder="Enter new test title">
       </div>
 
       <div class="form__group">
         <label for="topic" class="form__label">New Test topic</label>
-        <input id="topic" name="topic" type="text" required class="form__control"
+        <input id="topic" name="topic" type="text" class="form__control"
                placeholder="Enter new test topic">
       </div>
 
@@ -46,7 +46,7 @@
         <button type="button" class="btn btn--secondary" onclick="window.location.href='/secure/tests.jsp'">
           Отменить
         </button>
-        <button type="button" class="btn btn--info" onclick="window.location.href='/secure/admin/editTest/editQuestions.jsp'">
+        <button type="button" class="btn btn--info" onclick="window.location.href='editQuestionsMenu.jsp'">
           Продолжить без редактирования
         </button>
         <button type="submit" class="btn btn--primary">Редактировать title и topic</button>

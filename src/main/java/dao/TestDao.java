@@ -5,6 +5,7 @@ import entity.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -97,6 +98,6 @@ public class TestDao {
      */
     public boolean existsByTitle(String title) throws IOException {
         return findAll().stream()
-                .anyMatch(test -> test.getTitle().equals(title));
+                .anyMatch(test -> Objects.equals(test.getTitle(), title));
     }
 }

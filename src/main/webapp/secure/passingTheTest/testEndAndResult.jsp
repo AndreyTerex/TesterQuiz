@@ -37,9 +37,14 @@
         </div>
 
         <div class="main-menu-button">
-        <form action="/secure/menu" method="get">
-            <button type="submit" class="btn btn--primary">Menu</button>
-        </form>
+            <form action="/secure/tests/${currentTest.id}/submit" method="post">
+                <button type="submit" class="btn btn--primary">Save result</button>
+            </form>
+        </div>
+        <div class="page-footer">
+            <form action="/secure/menu" method="get">
+                <button type="submit" class="btn cancel-button">Cancel and back to main menu</button>
+            </form>
         </div>
     </c:if>
 

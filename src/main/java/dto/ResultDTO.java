@@ -21,17 +21,19 @@ public class ResultDTO {
     private UUID user_id;
     private UUID test_id;
     private Integer score;
+    private String testTitle;
     private LocalDateTime date;
     private List<ResultAnswerDTO> resultAnswers;
 
     public Result toEntity() {
         return Result.builder()
-                .id(id).
-                user_id(user_id).
-                test_id(test_id).
-                score(score).
-                date(date).
-                resultAnswers(resultAnswers.stream().map(ResultAnswerDTO::toEntity).collect(Collectors.toList()))
+                .id(id)
+                .user_id(user_id)
+                .test_id(test_id)
+                .score(score)
+                .date(date)
+                .testTitle(testTitle)
+                .resultAnswers(resultAnswers.stream().map(ResultAnswerDTO::toEntity).collect(Collectors.toList()))
                 .build();
     }
 }

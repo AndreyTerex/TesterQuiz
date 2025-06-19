@@ -44,7 +44,7 @@
             </div>
 
             <div class="action-buttons">
-                <a href="${pageContext.request.contextPath}/secure/menu.jsp" class="btn btn--large btn--primary">
+                <a href="/secure/menu" class="btn btn--large btn--primary">
                     Return to menu
                 </a>
             </div>

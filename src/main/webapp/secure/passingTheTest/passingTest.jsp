@@ -47,7 +47,7 @@
       <p><strong>Question text:</strong> <c:out value="${currentQuestion.question_text}" /></p>
     </div>
 
-    <form action="/nextQuestion" method="post">
+    <form action="/secure/nextQuestion" method="post">
       <div class="answers">
         <c:forEach var="answer" items="${currentQuestion.answers}" varStatus="status">
           <div class="answer-option">

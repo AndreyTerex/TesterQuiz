@@ -5,6 +5,7 @@ import Services.TestService;
 import Services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import constants.ServletPaths;
+import dto.AnswerDTO;
 import dto.UserDTO;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -14,6 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseServlet extends HttpServlet {
     protected UserService userService;
@@ -42,7 +45,7 @@ public class BaseServlet extends HttpServlet {
     }
 
     /**
-     * Проверяет, ау��ентифицирован ли пользователь
+     * Проверяет, аутентифицирован ли пользователь
      */
     protected boolean isUserAuthenticated(HttpServletRequest request) {
         return getCurrentUser(request) != null;
@@ -68,20 +71,6 @@ public class BaseServlet extends HttpServlet {
      */
     protected void setSessionSuccess(HttpServletRequest request, String successMessage) {
         request.getSession().setAttribute("success", successMessage);
-    }
-
-    /**
-     * Устанавливает сообщение об ошибке в HTTP запрос
-     */
-    protected void setRequestError(HttpServletRequest request, String errorMessage) {
-        request.setAttribute("error", errorMessage);
-    }
-
-    /**
-     * Устанавливает сообщение об успехе в HTTP запрос
-     */
-    protected void setRequestSuccess(HttpServletRequest request, String successMessage) {
-        request.setAttribute("success", successMessage);
     }
 
     /**
@@ -156,4 +145,52 @@ public class BaseServlet extends HttpServlet {
         String value = request.getParameter(paramName);
         return (value != null && !value.trim().isEmpty()) ? value.trim() : null;
     }
+
+    /**
+     * Очищает сессию от ненужных данных.
+     * Удаляет временные данные, связанные с прохождением тестов и создании тестов,
+     * но сохраняет важную информацию о пользователе, error massage и success message.
+     */
+    protected void clearSessionData(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.removeAttribute("currentTest");
+            session.removeAttribute("currentQuestion");
+            session.removeAttribute("result");
+            session.removeAttribute("timeForTest");
+            session.removeAttribute("testTimeOut");
+        }
+    }
+
+    /**
+     * Извлекает список ответов из HTTP запроса
+     */
+    protected List<AnswerDTO> extractAnswersFromRequest(HttpServletRequest request) {
+        List<dto.AnswerDTO> answerDTOList = new ArrayList<>();
+        
+        for (int i = 1; i <= 10; i++) {
+            String answerText = getParam(request, "answer" + i);
+            String isCorrect = getParam(request, "correct" + i);
+
+            if (answerText != null && !answerText.trim().isEmpty()) {
+               AnswerDTO answer = dto.AnswerDTO.builder()
+                        .id(java.util.UUID.randomUUID())
+                        .answer_text(answerText)
+                        .isCorrect("true".equals(isCorrect))
+                        .build();
+
+                answerDTOList.add(answer);
+            }
+        }
+        
+        return answerDTOList;
+    }
+
+    /**
+     * Проверяет, есть ли хотя бы один правильный ответ в списке
+     */
+    protected boolean hasCorrectAnswer(List<AnswerDTO> answerDTOList) {
+        return answerDTOList.stream().anyMatch(AnswerDTO::isCorrect);
+    }
+
 }
