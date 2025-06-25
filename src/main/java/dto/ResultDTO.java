@@ -1,7 +1,6 @@
 package dto;
 
 import entity.Result;
-import entity.ResultAnswer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Data
@@ -33,7 +33,9 @@ public class ResultDTO {
                 .score(score)
                 .date(date)
                 .testTitle(testTitle)
-                .resultAnswers(resultAnswers.stream().map(ResultAnswerDTO::toEntity).collect(Collectors.toList()))
+                .resultAnswers(resultAnswers.stream()
+                        .map(ResultAnswerDTO::toEntity)
+                        .collect(Collectors.toCollection(ArrayList::new)))
                 .build();
     }
 }

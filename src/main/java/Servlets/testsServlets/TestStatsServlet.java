@@ -1,6 +1,7 @@
 package Servlets.testsServlets;
 
 import Servlets.BaseServlet;
+import constants.ServletPaths;
 import dto.TestDTO;
 import dto.TestStatsDTO;
 import jakarta.servlet.ServletException;
@@ -11,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(urlPatterns = "/secure/admin/stats")
+@WebServlet(urlPatterns = ServletPaths.ADMIN_STATS_PATH)
 public class TestStatsServlet extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -20,7 +21,7 @@ public class TestStatsServlet extends BaseServlet {
         Integer attempts = resultService.countAttempts();
         req.setAttribute("stats", stats);
         req.setAttribute("attempts", attempts);
-        req.getRequestDispatcher("/secure/admin/adminStatisticPage.jsp").forward(req, resp);
+        forwardTo(req, resp, ServletPaths.ADMIN_STATS_JSP);
 
     }
 }

@@ -10,23 +10,19 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+
 @WebServlet(urlPatterns = ServletPaths.LOGIN_PATH)
 public class LoginServlet extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher(ServletPaths.LOGIN_JSP).forward(req, resp);
+        forwardTo(req,resp,ServletPaths.LOGIN_JSP);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        UserDTO userDTO = userService.login((getParam(req,"username")), (getParam(req,"password")));
-
-        if (userDTO != null) {
-            req.getSession().setAttribute("user", userDTO);
-            redirectTo(resp, ServletPaths.MENU_PATH);
-        } else {
-            redirectWithError(req, resp, "Incorrect login or password", ServletPaths.LOGIN_PATH);
-        }
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        UserDTO userDTO = userService.login(getParam(req, "username"), getParam(req, "password"));
+        setCurrentUser(req, userDTO);
+        redirectTo(resp, ServletPaths.MENU_PATH);
     }
 }
 

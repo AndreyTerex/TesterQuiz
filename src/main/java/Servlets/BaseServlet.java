@@ -1,6 +1,7 @@
 package Servlets;
 
 import Services.ResultService;
+import Services.TestRunnerService;
 import Services.TestService;
 import Services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +24,7 @@ public class BaseServlet extends HttpServlet {
     protected TestService testService;
     protected ObjectMapper objectMapper;
     protected ResultService resultService;
+    protected TestRunnerService testRunnerService;
 
     /**
      * Инициализирует базовый сервлет и получает сервисы из контекста приложения
@@ -34,6 +36,7 @@ public class BaseServlet extends HttpServlet {
         testService = (TestService) config.getServletContext().getAttribute("testService");
         objectMapper = (ObjectMapper) config.getServletContext().getAttribute("objectMapper");
         resultService = (ResultService) config.getServletContext().getAttribute("resultService");
+        testRunnerService = (TestRunnerService) config.getServletContext().getAttribute("testRunnerService");
     }
 
     /**
@@ -77,7 +80,7 @@ public class BaseServlet extends HttpServlet {
      * Перенаправляет пользователя с сообщением об ошибке
      */
     protected void redirectWithError(HttpServletRequest request, HttpServletResponse response,
-                                     String errorMessage, String redirectPath) throws ServletException, IOException {
+                                     String errorMessage, String redirectPath) throws  IOException {
         setSessionError(request, errorMessage);
         response.sendRedirect(redirectPath);
     }
@@ -95,8 +98,7 @@ public class BaseServlet extends HttpServlet {
     /**
      * Проверяет аутентификацию и перенаправляет на страницу входа при необходимости
      */
-    protected boolean checkAuthenticationAndRedirect(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    protected boolean checkAuthenticationAndRedirect(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!isUserAuthenticated(request)) {
             redirectTo(response, ServletPaths.LOGIN_PATH);
             return false;
@@ -107,20 +109,12 @@ public class BaseServlet extends HttpServlet {
     /**
      * Проверяет права администратора и отправляет ошибку 403 при отсутствии прав
      */
-    protected boolean checkAdminRightsAndSendError(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    protected boolean checkAdminRightsAndSendError(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!isAdmin(request)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return false;
         }
         return true;
-    }
-
-    /**
-     * Получает реальный путь к файлу в файловой системе сервера
-     */
-    protected String getRealPath(HttpServletRequest request, String relativePath) {
-        return request.getServletContext().getRealPath(relativePath);
     }
 
     /**
@@ -136,6 +130,41 @@ public class BaseServlet extends HttpServlet {
     protected void forwardTo(HttpServletRequest request, HttpServletResponse response, String path)
             throws ServletException, IOException {
         request.getRequestDispatcher(path).forward(request, response);
+    }
+
+    /**
+     * Устанавливает текущего пользователя в HTTP сессию
+     */
+    protected void setCurrentUser(HttpServletRequest request, UserDTO user) {
+        request.getSession().setAttribute("user", user);
+    }
+
+    /**
+     * Устанавливает атрибуты сессии для прохождения теста
+     */
+    protected void setTestSessionAttributes(HttpServletRequest request, dto.TestSessionDTO sessionAttributes) {
+        HttpSession session = request.getSession();
+        session.setAttribute("timeForTest", sessionAttributes.getRoundedEndTime());
+        session.setAttribute("currentQuestion", sessionAttributes.getCurrentQuestion());
+        session.setAttribute("result", sessionAttributes.getResult());
+    }
+
+    /**
+     * Обновляет атрибуты сессии в процессе прохождения теста
+     */
+    protected void updateTestProgress(HttpServletRequest request, dto.TestProgressDTO testProgress) {
+        HttpSession session = request.getSession();
+        session.setAttribute("result", testProgress.getResult());
+        if (!testProgress.isTestFinished()) {
+            session.setAttribute("currentQuestion", testProgress.getQuestion());
+        }
+    }
+
+    /**
+     * Устанавливает текущий тест в сессию
+     */
+    protected void setCurrentTest(HttpServletRequest request, dto.TestDTO test) {
+        request.getSession().setAttribute("currentTest", test);
     }
     
     /**

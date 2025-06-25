@@ -1,7 +1,5 @@
 package dto;
 
-import entity.Answer;
-import entity.Question;
 import entity.ResultAnswer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Data
@@ -22,7 +21,9 @@ public class ResultAnswerDTO {
     public ResultAnswer toEntity(){
         return ResultAnswer.builder()
                 .question(question.toEntity())
-                .selectedAnswers(selectedAnswers.stream().map(AnswerDTO::toEntity).collect(Collectors.toList()))
+                .selectedAnswers(selectedAnswers.stream()
+                        .map(AnswerDTO::toEntity)
+                        .collect(Collectors.toCollection(ArrayList::new)))
                 .build();
     }
 }

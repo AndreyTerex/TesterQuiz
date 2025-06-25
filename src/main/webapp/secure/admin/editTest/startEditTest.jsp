@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,20 +15,26 @@
     <p class="header__subtitle">Start by editing basic test information</p>
   </header>
   <main class="main">
-    <c:if test="${not empty error}">
-      <div class="alert alert--error">
-          ${error}
-      </div>
-      <c:remove var="error" scope="session"/>
+    <c:if test="${not empty sessionScope.error}">
+        <div class="alert alert--error">
+            <c:out value="${sessionScope.error}"/>
+        </div>
+        <c:remove var="error" scope="session"/>
     </c:if>
-    <c:if test="${not empty success}">
-      <div class="alert alert--success">
-          ${success}
-      </div>
-      <c:remove var="success" scope="session"/>
+    <c:if test="${not empty sessionScope.success}">
+        <div class="alert alert--success">
+            <c:out value="${sessionScope.success}"/>
+        </div>
+        <c:remove var="success" scope="session"/>
+    </c:if>
+    <c:if test="${not empty sessionScope.success}">
+        <div class="alert alert--success">
+            <c:out value="${sessionScope.success}"/>
+        </div>
+        <c:remove var="success" scope="session"/>
     </c:if>
 
-    <form action="/secure/admin/editTest" method="post" class="form">
+      <form action="/secure/tests/${sessionScope.currentTest.id}" method="post" class="form">
       <input type="hidden" name="_method" value="PUT">
       <div class="form__group">
         <label for="title" class="form__label">New Test title</label>

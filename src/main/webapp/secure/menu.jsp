@@ -12,18 +12,18 @@
 <div class="page page--menu">
   <header class="header header--menu">
     <h1 class="header__title">Dashboard</h1>
-    <p class="header__subtitle">Welcome back, ${sessionScope.user.username}!</p>
+    <p class="header__subtitle">Welcome back, <c:out value="${sessionScope.user.username}"/>!</p>
   </header>
   <main class="main">
     <c:if test="${not empty sessionScope.error}">
       <div class="alert alert--error">
-          ${sessionScope.error}
+          <c:out value="${sessionScope.error}"/>
       </div>
       <c:remove var="error" scope="session"/>
     </c:if>
     <c:if test="${not empty sessionScope.success}">
       <div class="alert alert--success">
-          ${sessionScope.success}
+          <c:out value="${sessionScope.success}"/>
       </div>
       <c:remove var="success" scope="session"/>
     </c:if>

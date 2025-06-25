@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
 <c:set var="user" value="${sessionScope.user}" />
 <c:set var="role" value="${not empty user and not empty user.role ? user.role : ''}" />
@@ -16,13 +16,13 @@
 <div>
     <c:if test="${not empty sessionScope.error}">
         <div class="alert alert--error">
-                ${sessionScope.error}
+                <c:out value="${sessionScope.error}"/>
         </div>
         <c:remove var="error" scope="session"/>
     </c:if>
     <c:if test="${not empty sessionScope.success}">
         <div class="alert alert--success">
-                ${sessionScope.success}
+                <c:out value="${sessionScope.success}"/>
         </div>
         <c:remove var="success" scope="session"/>
     </c:if>
@@ -30,7 +30,7 @@
     <div class="page-header-centered">
         <h2 class="page-title">Edit Questions</h2>
         <c:if test="${not empty sessionScope.currentTest}">
-            <h3 class="page-subtitle">Test: ${sessionScope.currentTest.title}</h3>
+            <h3 class="page-subtitle">Test: <c:out value="${sessionScope.currentTest.title}"/></h3>
         </c:if>
     </div>
 
@@ -51,8 +51,8 @@
                 <tbody>
                     <c:forEach var="question" items="${sessionScope.currentTest.questions}" varStatus="status">
                         <tr>
-                            <td class="question-number">${question.question_number}</td>
-                            <td class="question-text">${question.question_text}</td>
+                            <td class="question-number"><c:out value="${question.question_number}"/></td>
+                            <td class="question-text"><c:out value="${question.question_text}"/></td>
                             <td class="actions">
                                 <button class="edit-btn" onclick="editQuestion('${question.id}')">Edit Question</button>
                             </td>

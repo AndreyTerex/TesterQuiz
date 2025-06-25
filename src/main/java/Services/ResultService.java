@@ -1,20 +1,26 @@
 package Services;
 
-import dao.ResultDao;
+import dao.IResultDao;
 import dto.ResultDTO;
 import dto.TestDTO;
 import dto.TestStatsDTO;
 import entity.*;
+import exceptions.DataAccessException;
+import exceptions.SaveException;
+import exceptions.ValidationException;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class ResultService {
-    private final ResultDao resultDao;
+    private final IResultDao resultDao;
 
-    public ResultService(ResultDao resultDao) {
+    public ResultService(IResultDao resultDao) {
         this.resultDao = resultDao;
     }
 
@@ -26,7 +32,7 @@ public class ResultService {
                 .id(UUID.randomUUID())
                 .user_id(userid)
                 .test_id(test.getId())
-                .resultAnswers(new ArrayList<ResultAnswer>())
+                .resultAnswers(new ArrayList<>())
                 .date(startTime)
                 .testTitle(test.getTitle())
                 .build();
@@ -35,8 +41,12 @@ public class ResultService {
     /**
      * Сохраняет результат прохождения теста
      */
-    public void saveResult(ResultDTO resultDTO, String realPath) throws IOException {
-        resultDao.save(resultDTO.toEntity(), realPath);
+    public void saveResult(ResultDTO resultDTO) {
+        try {
+            resultDao.save(resultDTO.toEntity());
+        } catch (DataAccessException e) {
+            throw new SaveException("Failed to save result");
+        }
     }
 
 
@@ -54,7 +64,7 @@ public class ResultService {
 
             List<Answer> selectedAnswers = resultAnswer.getSelectedAnswers();
 
-            if (new HashSet<>(selectedAnswers).containsAll(correctAnswers) && new HashSet<>(correctAnswers).containsAll(selectedAnswers)) {
+            if (new HashSet<>(selectedAnswers).equals(new HashSet<>(correctAnswers))) {
                 score++;
             }
         }
@@ -63,29 +73,46 @@ public class ResultService {
         return result;
     }
 
-    public List<ResultDTO> getAllResultsByUserId(UUID id) throws IOException {
-       return resultDao.getAllResultsByUserId(id).stream()
+    public List<ResultDTO> getAllResultsByUserId(UUID id) {
+        return resultDao.getAllResultsByUserId(id).stream()
                 .map(Result::toDTO)
-                .collect(Collectors.toList());
+                .sorted(Comparator.comparing(ResultDTO::getDate).reversed())
+                .toList();
 
     }
 
-    public ResultDTO findById(String id) throws IOException {
-        Result result = resultDao.findById(UUID.fromString(id));
-        return result != null ? result.toDTO() : null;
+    public ResultDTO findById(String id) {
+        if(id == null || id.isEmpty()){
+            throw new ValidationException("Result id is null or empty");
+        }
+        Optional<ResultDTO> OptionalResult = resultDao.findById(UUID.fromString(id));
+        if (OptionalResult.isEmpty()) {
+            throw new ValidationException("Result with id= + "+ id + " not found");
+        }
+        return OptionalResult.get();
     }
 
-    public List<TestStatsDTO> getStats(List<TestDTO> allTestsDTO) throws IOException {
-        List<Result> results = resultDao.findAll();
+    public List<TestStatsDTO> getStats(List<TestDTO> allTestsDTO) {
         List<TestStatsDTO> testStatsDTOList = new ArrayList<>();
+
         for (TestDTO testDTO : allTestsDTO) {
+
+            List<Result> testSpecificResults = findAllResultsByTestId(testDTO.getId());
+
             String testTitle = testDTO.getTitle();
             Integer totalQuestions = testDTO.getQuestions().size();
-            Integer totalPassed = results.stream().filter(r -> r.getTest_id().equals(testDTO.getId())).toList().size();
-            Optional<Result> maxOptional = results.stream().filter(r -> r.getTest_id().equals(testDTO.getId())).max(Comparator.comparingInt(Result::getScore));
-            Integer maxScore = maxOptional.isPresent() ? maxOptional.get().getScore() :0;
-            Optional<Result> min = results.stream().min((r1, r2) -> r2.getDate().compareTo(r1.getDate()));
-            LocalDateTime lastPassed = min.map(Result::getDate).orElse(null);
+            Integer totalPassed = testSpecificResults.size();
+
+            Integer maxScore = testSpecificResults.stream()
+                    .mapToInt(Result::getScore)
+                    .max()
+                    .orElse(0);
+
+            LocalDateTime lastPassed = testSpecificResults.stream()
+                    .map(Result::getDate)
+                    .max(LocalDateTime::compareTo)
+                    .orElse(null);
+
             TestStatsDTO testStatsDTO = TestStatsDTO.builder()
                     .testTitle(testTitle)
                     .totalQuestions(totalQuestions)
@@ -96,19 +123,17 @@ public class ResultService {
 
             testStatsDTOList.add(testStatsDTO);
         }
+        testStatsDTOList.sort(Comparator.comparing(TestStatsDTO::getTestTitle));
         return testStatsDTOList;
-
     }
 
 
-    private List<Result> findAllResultsByTestId(UUID testId, List<Result> results) {
-        return results.stream()
-                .filter(result -> result.getTest_id().equals(testId))
-                .toList();
+    private List<Result> findAllResultsByTestId(UUID testId) {
+        return resultDao.getAllResultsByTestId(testId);
 
     }
 
-    public Integer countAttempts() throws IOException {
-        return resultDao.findAll().size();
+    public Integer countAttempts() {
+        return resultDao.getCount();
     }
 }

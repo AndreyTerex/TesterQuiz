@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,6 +14,14 @@
     <div class="page-header-centered">
         <h2 class="page-title">Test Information</h2>
     </div>
+    <c:if test="${not empty sessionScope.error}">
+    <div class="alert alert--error"><c:out value="${sessionScope.error}"/></div>
+        <c:remove var="error" scope="session"/>
+    </c:if>
+    <c:if test="${not empty sessionScope.success}">
+    <div class="alert alert--success"><c:out value="${sessionScope.success}"/></div>
+        <c:remove var="success" scope="session"/>
+    </c:if>
     <c:choose>
         <c:when test="${not empty sessionScope.currentTest}">
             <c:set var="currentTest" value="${sessionScope.currentTest}" />

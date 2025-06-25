@@ -1,41 +1,47 @@
 package dao;
 
 import entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class UserDao {
+public class UserDao implements IUserDao {
+    private static final Logger logger = LoggerFactory.getLogger(UserDao.class);
     private final JsonFileDao<User> baseDao;
+    private Map<String, User> userMap;
 
     public UserDao(JsonFileDao<User> baseDao) {
         this.baseDao = baseDao;
+        loadUserCache();
     }
 
+
+    private void loadUserCache(){
+        List<User> allUsers = baseDao.findAll();
+        userMap = new ConcurrentHashMap<>();
+        for (User user : allUsers) {
+            userMap.put(user.getUsername(), user);
+        }
+        logger.info("Users cache refreshed");
+
+    }
     /**
      * Находит пользователя по имени пользователя
      */
-    public Optional<User> findByUsername(String username) throws IOException {
-        return baseDao.findAll().stream()
-                .filter(user -> user.getUsername().equals(username))
-                .findFirst();
+    public Optional<User> findByUsername(String username) {
+        return Optional.ofNullable(userMap.get(username));
     }
 
     /**
      * Добавляет нового пользователя в систему
      */
-    public boolean add(User build) throws IOException {
-            return baseDao.add(build);
-    }
-
-    /**
-     * Находит пользователя по уникальному идентификатору
-     */
-    public User findById(UUID uuid) throws IOException {
-        return baseDao.findAll().stream()
-                .filter(user -> user.getId().equals(uuid))
-                .findFirst()
-                .orElse(null);
+    public void add(User build) {
+        baseDao.add(build);
+        userMap.put(build.getUsername(), build);
+        logger.debug("User '{}' added to cache.", build.getUsername());
     }
 }

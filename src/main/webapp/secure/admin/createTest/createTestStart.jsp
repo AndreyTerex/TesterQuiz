@@ -1,5 +1,5 @@
 
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,15 +16,21 @@
         <p class="header__subtitle">Start by entering basic test information</p>
     </header>
     <main class="main">
-        <c:if test="${not empty error}">
+        <c:if test="${not empty sessionScope.error}">
             <div class="alert alert--error">
-                    ${error}
+                <c:out value="${sessionScope.error}"/>
             </div>
             <c:remove var="error" scope="session"/>
         </c:if>
-        <c:if test="${not empty success}">
+        <c:if test="${not empty sessionScope.success}">
             <div class="alert alert--success">
-                    ${success}
+                <c:out value="${sessionScope.success}"/>
+            </div>
+            <c:remove var="success" scope="session"/>
+        </c:if>
+        <c:if test="${not empty sessionScope.success}">
+            <div class="alert alert--success">
+                <c:out value="${sessionScope.success}"/>
             </div>
             <c:remove var="success" scope="session"/>
         </c:if>

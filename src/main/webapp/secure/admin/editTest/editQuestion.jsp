@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
 <c:set var="questionId" value="${param.questionId}" />
 
@@ -25,16 +25,16 @@
 <div class="page page--create-test">
     <header class="header header--auth">
         <h1 class="header__title">Edit Question</h1>
-        <p class="header__subtitle">Test: ${sessionScope.currentTest.title}</p>
+        <p class="header__subtitle">Test: <c:out value="${sessionScope.currentTest.title}"/></p>
     </header>
 
     <main class="main">
         <c:if test="${not empty sessionScope.error}">
-            <div class="alert alert--error">${sessionScope.error}</div>
+            <div class="alert alert--error"><c:out value="${sessionScope.error}"/></div>
             <c:remove var="error" scope="session"/>
         </c:if>
         <c:if test="${not empty sessionScope.success}">
-            <div class="alert alert--success">${sessionScope.success}</div>
+            <div class="alert alert--success"><c:out value="${sessionScope.success}"/></div>
             <c:remove var="success" scope="session"/>
         </c:if>
 
@@ -45,12 +45,12 @@
         <c:if test="${not empty currentQuestion}">
             <div class="current-data">
                 <h3>Current Question Data:</h3>
-                <p><strong>Question ${currentQuestion.question_number}:</strong> ${currentQuestion.question_text}</p>
+                <p><strong>Question <c:out value="${currentQuestion.question_number}"/>:</strong> <c:out value="${currentQuestion.question_text}"/></p>
                 <p><strong>Answers:</strong></p>
                 <ul>
                     <c:forEach var="answer" items="${currentQuestion.answers}" varStatus="status">
                         <li>
-                            ${answer.answer_text}
+                            <c:out value="${answer.answer_text}"/>
                             <c:if test="${answer.correct}"> ✓</c:if>
                         </li>
                     </c:forEach>
@@ -64,7 +64,7 @@
                 <div class="form__group">
                     <label for="question" class="form__label">New Question Text</label>
                     <input id="question" name="question" type="text" required class="form__control" 
-                           value="${currentQuestion.question_text}">
+                           value="<c:out value="${currentQuestion.question_text}"/>">
                 </div>
 
                 <div class="alert alert--info">
@@ -83,7 +83,7 @@
                         <c:choose>
                             <c:when test="${not empty currentAnswer}">
                                 <input id="answer${i}" name="answer${i}" type="text" class="form__control" 
-                                       value="${currentAnswer.answer_text}">
+                                       value="<c:out value="${currentAnswer.answer_text}"/>">
                             </c:when>
                             <c:otherwise>
                                 <input id="answer${i}" name="answer${i}" type="text" class="form__control" 

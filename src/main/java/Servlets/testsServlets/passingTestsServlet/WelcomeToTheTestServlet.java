@@ -3,7 +3,6 @@ package Servlets.testsServlets.passingTestsServlet;
 import Servlets.BaseServlet;
 import constants.ServletPaths;
 import dto.TestDTO;
-import entity.Test;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,11 +15,7 @@ public class WelcomeToTheTestServlet extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         TestDTO currentTestDTO = testService.findById(getParam(req,"id"));
-        if(currentTestDTO != null) {
-            req.getSession().setAttribute("currentTest", currentTestDTO);
-            forwardTo(req, resp, ServletPaths.TEST_WELCOME_PAGE_JSP);
-        } else {
-            redirectWithError(req, resp, "Тест не найден", ServletPaths.MENU_PATH);
-        }
+        setCurrentTest(req, currentTestDTO);
+        forwardTo(req, resp, ServletPaths.TEST_WELCOME_PAGE_JSP);
     }
 }

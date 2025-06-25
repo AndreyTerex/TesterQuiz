@@ -15,27 +15,20 @@ import java.util.UUID;
 public class RegistrationServlet extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher(ServletPaths.REGISTER_JSP).forward(req, resp);
+        forwardTo(req,resp,ServletPaths.REGISTER_JSP);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDTO userDTO = UserDTO.builder()
                 .username(getParam(req,"username"))
                 .id(UUID.randomUUID())
                 .role("USER")
                 .build();
-        try {
-            UserDTO registeredUser = userService.registerUser(userDTO, (getParam(req,"password")));
-            if (registeredUser != null) {
-                req.getSession().setAttribute("user", registeredUser);
-                redirectTo(resp, ServletPaths.LOGIN_PATH);
-            } else {
-                redirectWithError(req, resp, "Login already taken!", ServletPaths.REGISTER_PATH);
-            }
-        } catch (Exception e) {
-            redirectWithError(req, resp, e.getMessage(), ServletPaths.REGISTER_PATH);
-        }
+        UserDTO registeredUser = userService.registerUser(userDTO, getParam(req, "password"));
+        setCurrentUser(req, registeredUser);
+        setSessionSuccess(req, "Registration successful! Please log in.");
+        redirectTo(resp, ServletPaths.LOGIN_PATH);
     }
 }
 

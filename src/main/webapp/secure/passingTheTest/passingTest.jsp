@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,10 +14,12 @@
   <h2>Test Passing</h2>
 
   <c:if test="${not empty sessionScope.error}">
-    <div class="alert alert--error">
-        ${sessionScope.error}
-    </div>
+    <div class="alert alert--error"><c:out value="${sessionScope.error}"/></div>
     <c:remove var="error" scope="session"/>
+  </c:if>
+  <c:if test="${not empty sessionScope.success}">
+    <div class="alert alert--success"><c:out value="${sessionScope.success}"/></div>
+    <c:remove var="success" scope="session"/>
   </c:if>
   <c:if test="${sessionScope.testTimeOut == true}">
     <div class="alert alert--info">
@@ -75,5 +77,14 @@
   </div>
 </div>
 
+<script>
+    document.querySelector('form').addEventListener('submit', function(event) {
+        var checkboxes = document.querySelectorAll('input[name="selectedAnswers"]:checked');
+        if (checkboxes.length === 0) {
+            alert('Please select at least one answer.');
+            event.preventDefault();
+        }
+    });
+</script>
 </body>
 </html>

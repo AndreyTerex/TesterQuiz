@@ -1,6 +1,9 @@
 package entity;
 
 import dto.ResultDTO;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,7 +37,7 @@ public class Result {
                 .testTitle(testTitle)
                 .resultAnswers(resultAnswers.stream()
                         .map(ResultAnswer::toDTO)
-                        .toList())
+                        .collect(Collectors.toCollection(ArrayList::new)))
                 .build();
     }
 }

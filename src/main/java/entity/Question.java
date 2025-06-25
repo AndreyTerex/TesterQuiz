@@ -1,6 +1,9 @@
 package entity;
 
 import dto.QuestionDTO;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +27,9 @@ public class Question {
                 .id(id)
                 .question_number(question_number)
                 .question_text(question_text)
-                .answers(answers.stream().map(Answer::toDTO).toList())
+                .answers(answers.stream()
+                        .map(Answer::toDTO)
+                        .collect(Collectors.toCollection(ArrayList::new)))
                 .build();
     }
 }

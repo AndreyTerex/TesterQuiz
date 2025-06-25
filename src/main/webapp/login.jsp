@@ -17,7 +17,7 @@
     <main class="main">
         <c:if test="${not empty sessionScope.error}">
             <div class="alert alert--error">
-                    ${sessionScope.error}
+                <c:out value="${sessionScope.error}"/>
             </div>
             <c:remove var="error" scope="session"/>
         </c:if>
@@ -32,14 +32,12 @@
             </div>
             <button type="submit" class="btn btn--primary btn--full">Sign In</button>
         </form>
-
-        </form>
         <div>
             <b>Don’t have an account?</b>
             <form action="/register" method="get" class="inline-form">
                 <button type="submit" class="btn btn--primary">Registration</button>
             </form>|
-        </div>  
+        </div>
     </main>
     <footer class="footer">
         © 2025 TesterQuiz

@@ -1,6 +1,4 @@
-
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="entity.Test" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,19 +28,19 @@
   <main class="main">
     <c:if test="${not empty sessionScope.error}">
         <div class="alert alert--error">
-                ${sessionScope.error}
+                <c:out value="${sessionScope.error}"/>
       </div>
         <c:remove var="error" scope="session"/>
     </c:if>
     <c:if test="${not empty sessionScope.success}">
         <div class="alert alert--success">
-                ${sessionScope.success}
+                <c:out value="${sessionScope.success}"/>
       </div>
       <c:remove var="success" scope="session"/>
     </c:if>
 
-      <form action="/secure/tests" method="post" class="form">
-      <input type="hidden" name="_method" value="PATCH">
+
+      <form action="/secure/tests/add-question" method="post" class="form">
 
       <div class="form__group">
         <label for="question" class="form__label">Question Text</label>

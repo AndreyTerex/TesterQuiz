@@ -17,9 +17,9 @@
   <main class="main">
     <c:if test="${not empty sessionScope.error}">
         <div class="alert alert--error">
-          ${sessionScope.error}
-      </div>
-      <c:remove var="error" scope="session"/>
+            <c:out value="${sessionScope.error}"/>
+        </div>
+        <c:remove var="error" scope="session"/>
     </c:if>
       <form action="/register" method="post" class="form form--register">
       <div class="form__group">
@@ -28,7 +28,7 @@
       </div>
       <div class="form__group">
           <label for="password" class="form__label">Password</label>
-          <input id="password" name="password" type="password" required class="form__control">
+          <input id="password" name="password" type="password" required minlength="6" class="form__control">
       </div>
         <button type="submit" class="btn btn--primary btn--full">Create Account</button>
     </form>

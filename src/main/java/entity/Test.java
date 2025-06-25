@@ -1,6 +1,8 @@
 package entity;
 
 import dto.TestDTO;
+
+import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,7 +42,9 @@ public class Test {
                 .topic(topic)
                 .id(id)
                 .creator_id(creator_id)
-                .questions(questions.stream().map(Question::toDTO).collect(Collectors.toList()))
+                .questions(questions.stream()
+                        .map(Question::toDTO)
+                        .collect(Collectors.toCollection(ArrayList::new)))
                 .build();
     }
 }

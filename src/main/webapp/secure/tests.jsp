@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
 <c:set var="user" value="${sessionScope.user}" />
 <c:set var="role" value="${not empty user and not empty user.role ? user.role : ''}" />
@@ -17,7 +17,7 @@
 <div class="main-container">
     <c:if test="${not empty sessionScope.error}">
         <div class="alert alert--error">
-                ${sessionScope.error}
+                <c:out value="${sessionScope.error}"/>
         </div>
         <c:remove var="error" scope="session"/>
     </c:if>
@@ -80,14 +80,14 @@
                 var questionCount = test.questions ? test.questions.length : 0;
 
                 var actionsHTML = '<div class="test-actions">' +
-                    '<form class="action-form" action="/secure/WelcomeToTheTestServlet" method="get">' +
+                    '<form class="action-form" action="/secure/welcomeToTest" method="get">' +
                     '<input type="hidden" name="id" value="' + test.id + '">' +
                     '<button type="submit" class="btn btn-start">Start</button>' +
                     '</form>';
                 
                 if (isAdmin) {
-                    actionsHTML += '<form class="action-form" action="/secure/tests/' + test.id + '" method="post">' +
-                        '<input type="hidden" name="_method" value="PUT">' +
+                    actionsHTML += '<form class="action-form" action="/secure/tests/prepare-edit" method="get">' +
+                        '<input type="hidden" name="id" value="' + test.id + '">' +
                         '<button type="submit" class="btn btn-edit">Edit</button>' +
                         '</form>';
 
@@ -100,8 +100,8 @@
                 actionsHTML += '</div>';
 
                 row.innerHTML =
-                    '<td>' + test.title + '</td>' +
-                    '<td>' + test.topic + '</td>' +
+                    '<td>' + escapeHTML(test.title) + '</td>' +
+                    '<td>' + escapeHTML(test.topic) + '</td>' +
                     '<td>' + questionCount + '</td>' +
                     '<td>' + actionsHTML + '</td>';
 
@@ -115,7 +115,7 @@
             topics.forEach(function (topic) {
                 var option = document.createElement('option');
                 option.value = topic;
-                option.textContent = topic;
+                option.textContent = escapeHTML(topic);
                 topicSelect.appendChild(option);
             });
         }
@@ -126,6 +126,12 @@
                 return selectedTopic === "" || test.topic === selectedTopic;
             });
             displayTests(filteredTests);
+        }
+
+        function escapeHTML(str) {
+            var div = document.createElement('div');
+            div.appendChild(document.createTextNode(str));
+            return div.innerHTML;
         }
 
         loadTests();
