@@ -1,65 +1,63 @@
-# 🚀 TesterQuiz: A Web-Based Quiz Platform
+# 🚀 TesterQuiz: My First Java Web App
 
-Welcome to TesterQuiz! This is a simple but powerful web application I built to let anyone create, share, and take tests online. It's a great tool for learning, teaching, or just challenging your friends.
+Welcome to TesterQuiz! This is my educational project, created to practice and demonstrate my skills in Java web development. I built it from scratch to learn how to create a full-featured web application.
 
-## ✨ What's this all about?
+## 🌱 What I Learned
 
-TesterQuiz is a full-featured quiz application with two main roles: regular users and administrators.
+This project was a great opportunity to dive deep into the following technologies and concepts:
 
-*   **For Everyone (Users):**
-    *   Sign up and create your own account.
-    *   Browse a list of available tests on different topics.
-    *   Take any test and see your score and results immediately.
+*   **Core Java & Backend Logic:** Building the application's foundation with Java.
+*   **Servlets & JSP:** Handling web requests and creating dynamic web pages.
+*   **JSTL:** Simplifying JSP pages and keeping the code clean.
+*   **Database Interaction:** Working with a file-based database to store user and test data.
+*   **Authentication & Authorization:** Implementing a secure login system with user roles.
+*   **Maven:** Managing project dependencies and the build process.
+*   **Tomcat:** Deploying and running the application on a real web server.
 
-*   **For the Boss (Admins):**
-    *   All the powers of a regular user.
-    *   **Create new tests:** Easily add new quizzes with titles and topics.
-    *   **Manage questions:** Add, edit, and remove questions from any test.
-    *   **View statistics:** Get insights into how users are performing on different tests.
+## ✨ Key Features
 
-## 🛠️ Under the Hood: The Tech Stack
+*   **User System:** Users can register and log in.
+*   **Role-Based Access:** Separate functionalities for regular `USER`s and `ADMIN`s.
+*   **Quiz Engine:** Users can take tests and see their scores.
+*   **Admin Panel:** Admins can create, edit, and delete tests and questions.
 
-This project is a classic Java web application built with some solid, industry-standard technologies:
+## 🛠️ Tech Stack
 
-*   **Backend:** Java, Servlets, JSP, and JSTL for the core logic and dynamic pages.
-*   **Frontend:** Simple and clean HTML & CSS.
-*   **Builds:** Managed by Apache Maven.
-*   **Server:** Runs on an Apache Tomcat server.
+*   **Backend:** Java, Servlets, JSP, JSTL
+*   **Frontend:** HTML, CSS
+*   **Build Tool:** Maven
+*   **Web Server:** Tomcat
 
 ## 🏁 Getting Started
 
-Ready to run the project locally? Here’s how you can get it up and running.
+If you want to run this project locally, here’s how:
 
 ### Prerequisites
 
-*   Java Development Kit (JDK) 8 or higher.
-*   Apache Maven.
-*   Apache Tomcat.
-*   Your favorite IDE (like IntelliJ IDEA or Eclipse).
+*   JDK 8 or higher
+*   Apache Maven
+*   Apache Tomcat
 
-### Installation & Setup
+### Installation
 
 1.  **Clone the repo:**
     ```sh
     git clone https://github.com/your-username/web-test-project.git
     cd web-test-project
     ```
-    *(Don't forget to replace `your-username` with the actual one!)*
+    *(Remember to replace `your-username` with your actual GitHub username!)*
 
-2.  **Build the project:**
-    Use Maven to build the project. This will download all the necessary dependencies and create a `.war` file in the `target/` directory.
+2.  **Build with Maven:**
     ```sh
     mvn clean install
     ```
 
 3.  **Deploy to Tomcat:**
-    Deploy the generated `.war` file to your Tomcat server. You can usually do this by copying the file into Tomcat's `webapps` directory or by configuring it directly in your IDE.
+    Copy the `.war` file from the `target/` directory to Tomcat's `webapps` folder, or configure the deployment in your IDE.
 
-4.  **You're all set!**
-    Open your browser and navigate to the application's URL (usually something like `http://localhost:8080/web-test-project-1.0-SNAPSHOT/`).
+4.  **Run it!**
+    Open your browser and go to `http://localhost:8080/web-test-project-1.0-SNAPSHOT/`.
 
-## 🤝 Want to contribute?
+---
 
-I'm always open to improvements and new ideas! If you find a bug or have a suggestion.
-
-Thanks for checking out my project!
+This project was a fantastic learning experience. Thanks for checking it out!
