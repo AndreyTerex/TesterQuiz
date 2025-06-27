@@ -1,9 +1,36 @@
-.main-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 24px;
-    min-height: 100vh;
+.input {
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    background: #ffffff;
+    color: #1f2937;
+    font-weight: 500;
+    transition: all 0.2s ease;
 }
+
+.input:focus {
+    border-color: #667eea;
+    background: #f8fafc;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+
+.card {
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+:root {
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-secondary: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+
 
 .footer {
     background: #f8fafc;
@@ -29,7 +56,7 @@ html, body {
 
 
 .header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient-primary);
     padding: 20px 0;
     text-align: center;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -53,7 +80,7 @@ html, body {
 .intro h2 {
     font-size: 3rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient-primary);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -89,7 +116,7 @@ html, body {
     margin-right: auto;
 }
 
-.feature {
+.feature, .card {
     background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
     padding: 40px 32px;
     border-radius: 20px;
@@ -148,7 +175,7 @@ html, body {
         gap: 24px;
     }
 
-    .feature {
+    .feature, .card {
         padding: 32px 24px;
     }
 
@@ -219,7 +246,7 @@ body {
 .header--menu .header__title {
     font-size: 2.25rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient-primary);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -249,7 +276,7 @@ body {
     margin: 0 auto;
 }
 
-.menu-card {
+.menu-card, .card {
     background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
     border-radius: 16px;
     padding: 24px;
@@ -348,14 +375,7 @@ body {
     margin-top: 24px;
 }
 
-.footer--landing {
-    text-align: center;
-    color: #a8afb9;
-    font-size: 15px;
-    padding-top: 16px;
-    border-top: 1px solid #ecedf3;
-    margin-top: 24px;
-}
+
 
 /* --- Forms --- */
 .form {
@@ -382,7 +402,7 @@ body {
     margin-bottom: 6px;
     letter-spacing: 0.025em;
 }
-.form__control {
+.form__control, .input {
     border: 2px solid #e5e7eb;
     border-radius: 12px;
     padding: 12px 16px;
@@ -392,7 +412,7 @@ body {
     transition: all 0.2s ease;
     font-weight: 500;
 }
-.form__control:focus {
+.form__control:focus, .input:focus {
     border-color: #667eea;
     background: #f8fafc;
     outline: none;
@@ -418,12 +438,12 @@ body {
     box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.1);
 }
 
-.btn--primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.btn--primary, .btn--info {
+    background: var(--gradient-primary);
     box-shadow: 0 4px 14px 0 rgba(102, 126, 234, 0.3);
 }
 
-.btn--primary:hover {
+.btn--primary:hover, .btn--info:hover {
     background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
     transform: translateY(-1px);
     box-shadow: 0 6px 20px 0 rgba(102, 126, 234, 0.4);
@@ -434,7 +454,7 @@ body {
     justify-content: center;
 }
 .btn--secondary {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: var(--gradient-secondary);
     box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.3);
 }
 
@@ -445,7 +465,7 @@ body {
 }
 
 .btn--danger {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    background: var(--gradient-danger);
     box-shadow: 0 4px 14px 0 rgba(239, 68, 68, 0.3);
 }
 
@@ -542,6 +562,8 @@ body {
     margin: 0 auto;
     padding: 24px;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .page-header-centered {
@@ -565,7 +587,7 @@ body {
 .page-title {
     font-size: 2.5rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient-primary);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -575,7 +597,7 @@ body {
 }
 
 /* --- Topic Filter Section --- */
-.topic-filters {
+.topic-filters, .card {
     margin: 0 0 32px 0;
     padding: 24px;
     background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
@@ -612,7 +634,7 @@ table#testsTable {
 }
 
 table#testsTable thead tr {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient-primary);
     color: #ffffff;
 }
 
@@ -681,7 +703,7 @@ table#testsTable td button {
 }
 
 table#testsTable td button:first-child {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: var(--gradient-secondary);
     color: #ffffff;
     box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
@@ -705,7 +727,7 @@ table#testsTable td button:nth-child(2):hover {
 }
 
 table#testsTable td button:last-child {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    background: var(--gradient-danger);
     color: #ffffff;
     box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
 }
@@ -740,7 +762,7 @@ table#testsTable th .sort-arrow {
     font-size: 0.875rem;
     font-weight: 600;
     border-radius: 12px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient-primary);
     color: #ffffff;
     cursor: pointer;
     box-shadow: 0 4px 14px 0 rgba(102, 126, 234, 0.3);
@@ -785,7 +807,7 @@ div[style*="margin-top: 10px"] button,
 
 div[style*="margin-top: 10px"] button:hover,
 .pagination-controls button:hover {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient-primary);
     color: #ffffff;
     border-color: transparent;
     transform: translateY(-1px);
@@ -844,7 +866,7 @@ div[style*="margin-top: 10px"] button:hover,
         margin: 0 0 24px 0;
     }
 
-    .topic-filters {
+    .topic-filters, .card {
         margin: 0 0 24px 0;
         padding: 16px;
     }
@@ -893,7 +915,7 @@ div[style*="margin-top: 10px"] button:hover,
         max-width: 400px;
     }
 
-    .menu-card {
+    .menu-card, .card {
         padding: 20px;
     }
 
@@ -938,7 +960,7 @@ div[style*="margin-top: 10px"] button:hover,
     margin-top: 20px;
 }
 
-.question-block {
+.question-block, .card {
     border: 1px solid #e1e5e9;
     border-radius: 8px;
     padding: 20px;
@@ -1193,7 +1215,7 @@ div[style*="margin-top: 10px"] button:hover,
 }
 
 .btn--success {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: var(--gradient-secondary);
     box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.3);
 }
 
@@ -1207,7 +1229,7 @@ div[style*="margin-top: 10px"] button:hover,
     margin-top: 32px;
 }
 
-.status-card {
+.status-card, .card {
     background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
     border-radius: 12px;
     padding: 20px;
@@ -1258,7 +1280,7 @@ div[style*="margin-top: 10px"] button:hover,
     display: block;
 }
 
-.test-summary {
+.test-summary, .card {
     background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
     border-radius: 16px;
     padding: 24px;
@@ -1335,7 +1357,7 @@ div[style*="margin-top: 10px"] button:hover,
 }
 
 /* --- Questions Table Styles --- */
-.table-container {
+.table-container, .card {
     margin: 32px 0;
     background: #ffffff;
     border-radius: 20px;
@@ -1366,7 +1388,7 @@ div[style*="margin-top: 10px"] button:hover,
 }
 
 /* --- Test Results Page Styles --- */
-.test-stats {
+.test-stats, .card {
     background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
     border-radius: 16px;
     padding: 24px;
@@ -1413,7 +1435,7 @@ div[style*="margin-top: 10px"] button:hover,
 }
 
 /* --- Test Welcome Page Styles --- */
-.test-info {
+.test-info, .card {
     background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
     border-radius: 16px;
     padding: 24px;
@@ -1519,7 +1541,7 @@ div[style*="margin-top: 10px"] button:hover,
 }
 
 /* --- Topic Filter Styles --- */
-.topic-filter {
+.topic-filter, .card {
     background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
     border-radius: 16px;
     padding: 20px;
@@ -1581,7 +1603,7 @@ div[style*="margin-top: 10px"] button:hover,
 .main-container h2 {
     font-size: 2.5rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient-primary);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1637,7 +1659,7 @@ div[style*="margin-top: 10px"] button:hover,
     margin: 0 0 16px 0;
 }
 
-.question-info-card {
+.question-info-card, .card {
     background: #ffffff;
     border-radius: 12px;
     padding: 20px;
@@ -1728,7 +1750,7 @@ div[style*="margin-top: 10px"] button:hover,
 }
 
 .questions-table thead tr {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient-primary);
     color: #ffffff;
 }
 
@@ -1819,202 +1841,202 @@ div[style*="margin-top: 10px"] button:hover,
         padding: 12px 16px;
         font-size: 0.8rem;
     }
-    
+
     .questions-table .question-text {
         max-width: 250px;
     }
-    
+
     .edit-btn {
         padding: 6px 12px;
         font-size: 0.7rem;
     }
-    
+
     /* Edit Question Page Responsive */
     .answer-display {
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
     }
-    
+
     .question-info-item {
         flex-direction: column;
         gap: 4px;
     }
-    
+
     .current-question-display {
         padding: 16px;
         margin-bottom: 24px;
     }
-    
+
     .edit-question-form {
         padding: 16px;
         margin-top: 24px;
     }
-    
+
     /* Test Info and Stats Responsive */
     .test-info,
-    .test-stats {
+    .test-stats, .card {
         padding: 16px;
         margin: 16px 0;
     }
-    
+
     .test-details {
         flex-direction: column;
         gap: 12px;
         text-align: center;
     }
-    
+
     .test-info-details {
         flex-direction: column;
         gap: 12px;
     }
-    
+
     /* Choice Buttons Responsive */
     .choice-buttons {
         grid-template-columns: 1fr;
         gap: 16px;
         margin: 24px 0;
     }
-    
+
     .btn--large {
         padding: 16px 20px;
         font-size: 0.9rem;
     }
-    
+
     /* Success Container Responsive */
     .success-container {
         padding: 24px 16px;
     }
-    
-    .test-summary {
+
+    .test-summary, .card {
         padding: 16px;
         margin: 16px 0;
     }
-    
+
     .test-name {
         font-size: 1.25rem;
     }
 }
 
 @media (max-width: 600px) {
-    .table-container {
+    .table-container, .card {
         margin: 24px -16px;
         border-radius: 0;
     }
-    
+
     .questions-table th,
     .questions-table td {
         padding: 10px 12px;
         font-size: 0.75rem;
     }
-    
+
     .questions-table .question-number {
         width: 80px;
     }
-    
+
     .questions-table .actions {
         width: 100px;
     }
-    
+
     .questions-table .question-text {
         max-width: 200px;
         font-size: 0.75rem;
     }
-    
+
     .edit-btn {
         padding: 6px 10px;
         font-size: 0.65rem;
     }
-    
+
     /* Mobile Improvements */
     .main-container h2 {
         font-size: 2rem;
     }
-    
+
     .page--create-test {
         max-width: 95vw;
         margin: 20px auto;
         padding: 16px;
     }
-    
+
     .page--success {
         max-width: 95vw;
         margin: 20px auto;
         padding: 16px;
     }
-    
+
     .header--auth {
         padding: 24px 16px 12px 16px;
     }
-    
+
     .header__title {
         font-size: 1.75rem;
     }
-    
+
     .form-actions {
         flex-direction: column;
         gap: 12px;
     }
-    
+
     .form-actions .btn {
         width: 100%;
     }
-    
+
     .action-buttons {
         flex-direction: column;
         gap: 12px;
     }
-    
+
     .action-buttons .btn {
         width: 100%;
     }
-    
+
     /* Answer Options Mobile */
     .answer-option {
         padding: 12px;
         margin: 8px 0;
     }
-    
+
     .answer-option label {
         gap: 8px;
         font-size: 0.9rem;
     }
-    
+
     /* Time Section Mobile */
     .time-section,
     .timeForTest {
         padding: 12px;
         margin: 16px 0;
     }
-    
+
     .time-section h4,
     .timeForTest h2 {
         font-size: 1rem;
     }
-    
+
     /* Topic Filter Mobile */
-    .topic-filter {
+    .topic-filter, .card {
         padding: 16px;
         margin: 16px 0;
     }
-    
+
     .topic-filter label {
         display: block;
         margin-bottom: 8px;
         margin-right: 0;
     }
-    
+
     .topic-filter select {
         width: 100%;
         min-width: auto;
     }
-    
+
     /* Status Card Mobile */
-    .status-card {
+    .status-card, .card {
         padding: 16px;
         margin: 16px 0;
     }
-    
+
     .status-info {
         margin-top: 24px;
     }
@@ -2025,54 +2047,54 @@ div[style*="margin-top: 10px"] button:hover,
     .main-container {
         padding: 16px 12px;
     }
-    
+
     .page-header-centered {
         margin: 0 0 16px 0;
     }
-    
+
     .return-btn-container {
         margin: 0 0 20px 0;
     }
-    
+
     .current-question-display {
         padding: 12px;
         margin-bottom: 20px;
     }
-    
+
     .edit-question-form {
         padding: 12px;
         margin-top: 20px;
     }
-    
-    .question-info-card {
+
+    .question-info-card, .card {
         padding: 12px;
         margin: 12px 0;
     }
-    
+
     .answer-display {
         padding: 8px 12px;
         margin-bottom: 6px;
     }
-    
+
     .test-info,
-    .test-stats {
+    .test-stats, .card {
         padding: 12px;
         margin: 12px 0;
     }
-    
+
     .success-container {
         padding: 20px 12px;
     }
-    
+
     .icon-large {
         font-size: 3rem;
     }
-    
+
     .btn--large {
         padding: 12px 16px;
         font-size: 0.85rem;
     }
-    
+
     .btn-icon {
         font-size: 1.5rem;
         margin-bottom: 6px;

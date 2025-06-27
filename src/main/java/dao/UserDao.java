@@ -30,14 +30,15 @@ public class UserDao implements IUserDao {
 
     }
     /**
-     * Находит пользователя по имени пользователя
+     * Finds a user by username.
      */
     public Optional<User> findByUsername(String username) {
+        if (username == null) { return Optional.empty(); }
         return Optional.ofNullable(userMap.get(username));
     }
 
     /**
-     * Добавляет нового пользователя в систему
+     * Adds a new user to the system and updates the cache.
      */
     public void add(User build) {
         baseDao.add(build);

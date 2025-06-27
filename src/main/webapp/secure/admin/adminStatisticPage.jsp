@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>Test Statistics</title>
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/Styles.css">
 </head>
 <body>
 <div class="main-container">
@@ -29,10 +29,10 @@
                 <c:when test="${not empty stats}">
                     <c:forEach var="stat" items="${stats}">
                         <tr>
-                            <td>${stat.testTitle}</td>
-                            <td>${stat.totalPassed}</td>
-                            <td>${stat.totalQuestions}</td>
-                            <td>${stat.maxScore}</td>
+                            <td><c:out value="${stat.testTitle}"/></td>
+                            <td><c:out value="${stat.totalPassed}"/></td>
+                            <td><c:out value="${stat.totalQuestions}"/></td>
+                            <td><c:out value="${stat.maxScore}"/></td>
                             <td>
                                 <c:choose>
                                     <c:when test="${not empty stat.lastPassed}">

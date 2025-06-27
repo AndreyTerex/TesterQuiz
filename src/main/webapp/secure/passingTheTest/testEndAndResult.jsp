@@ -1,12 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Test Result</title>
-    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="../../Styles.css">
 
 </head>
 <body>
@@ -35,7 +36,7 @@
             <p><strong>Questions :</strong> <c:out value="${fn:length(currentTest.questions)}" /></p>
             <p><strong>Correct answers :</strong> <c:out value="${result.score}" /></p>
             <p><strong>Success Rate :</strong>
-                <c:out value="${(result.score / fn:length(currentTest.questions)) * 100}" />%
+                <fmt:formatNumber value="${(result.score / fn:length(currentTest.questions)) * 100}" maxFractionDigits="1"/>%
             </p>
         </div>
 

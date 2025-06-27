@@ -1,4 +1,4 @@
-package filter;
+package Servlets.filter;
 
 import constants.ServletPaths;
 import dto.UserDTO;
@@ -12,9 +12,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-/**
- * Фильтр для проверки административных прав
- */
+
 @WebFilter(urlPatterns = ServletPaths.ADMIN_FILTER_PATTERN)
 public class AdminFilterServlet extends HttpFilter {
     

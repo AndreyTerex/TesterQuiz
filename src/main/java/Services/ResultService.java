@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class ResultService {
@@ -85,11 +84,9 @@ public class ResultService {
         if(id == null || id.isEmpty()){
             throw new ValidationException("Result id is null or empty");
         }
-        Optional<ResultDTO> OptionalResult = resultDao.findById(UUID.fromString(id));
-        if (OptionalResult.isEmpty()) {
-            throw new ValidationException("Result with id= + "+ id + " not found");
-        }
-        return OptionalResult.get();
+        return resultDao.findById(UUID.fromString(id))
+                .map(Result::toDTO)
+                .orElseThrow(() -> new ValidationException("Result with id=" + id + " not found"));
     }
 
     public List<TestStatsDTO> getStats(List<TestDTO> allTestsDTO) {
@@ -97,19 +94,19 @@ public class ResultService {
 
         for (TestDTO testDTO : allTestsDTO) {
 
-            List<Result> testSpecificResults = findAllResultsByTestId(testDTO.getId());
+            List<ResultDTO> testSpecificResults = findAllResultsByTestId(testDTO.getId());
 
             String testTitle = testDTO.getTitle();
             Integer totalQuestions = testDTO.getQuestions().size();
             Integer totalPassed = testSpecificResults.size();
 
             Integer maxScore = testSpecificResults.stream()
-                    .mapToInt(Result::getScore)
+                    .mapToInt(ResultDTO::getScore)
                     .max()
                     .orElse(0);
 
             LocalDateTime lastPassed = testSpecificResults.stream()
-                    .map(Result::getDate)
+                    .map(ResultDTO::getDate)
                     .max(LocalDateTime::compareTo)
                     .orElse(null);
 
@@ -128,9 +125,10 @@ public class ResultService {
     }
 
 
-    private List<Result> findAllResultsByTestId(UUID testId) {
-        return resultDao.getAllResultsByTestId(testId);
-
+    private List<ResultDTO> findAllResultsByTestId(UUID testId) {
+        return resultDao.getAllResultsByTestId(testId).stream()
+                .map(Result::toDTO)
+                .toList();
     }
 
     public Integer countAttempts() {

@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.UUID;
 
 @WebServlet(urlPatterns = ServletPaths.REGISTER_PATH)
 public class RegistrationServlet extends BaseServlet {
@@ -22,8 +21,6 @@ public class RegistrationServlet extends BaseServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDTO userDTO = UserDTO.builder()
                 .username(getParam(req,"username"))
-                .id(UUID.randomUUID())
-                .role("USER")
                 .build();
         UserDTO registeredUser = userService.registerUser(userDTO, getParam(req, "password"));
         setCurrentUser(req, registeredUser);

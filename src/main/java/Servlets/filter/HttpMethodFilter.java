@@ -1,4 +1,4 @@
-package filter;
+package Servlets.filter;
 
 import constants.ServletPaths;
 import jakarta.servlet.FilterChain;
@@ -12,9 +12,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
 
-/**
- * Фильтр для поддержки HTTP методов DELETE, PUT, PATCH через параметр _method
- */
 @WebFilter(urlPatterns = ServletPaths.HTTP_METHOD_FILTER_PATTERN)
 public class HttpMethodFilter extends HttpFilter {
     

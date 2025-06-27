@@ -15,9 +15,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class UserDTO {
-    @NotBlank(message = "Username is required.")
+    @NotBlank(message = "Username cannot be blank or contain only whitespace characters.")
     @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters long.")
-    @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "Username can only contain letters, numbers, and underscores.")
+    @Pattern(regexp = "^(?!\\d+$)[a-zA-Z0-9]+$", message = "Username can only contain letters and numbers, and cannot consist only of digits.")
     private String username;
     private String role;
     private UUID id;

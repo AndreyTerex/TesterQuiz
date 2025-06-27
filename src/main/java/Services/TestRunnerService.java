@@ -21,7 +21,7 @@ public class TestRunnerService {
     }
 
     /**
-     * Начинает прохождение теста пользователем
+     * Starts a test session for a user.
      */
     public TestSessionDTO startTest(UUID testId, UserDTO userDTO) {
         Test currentTest = testDao.findById(testId);
@@ -54,7 +54,7 @@ public class TestRunnerService {
     }
 
     /**
-     * Проверяет, истекло ли время прохождения теста
+     * Checks if the test time has ended.
      */
     public boolean checkTimeIsEnded(String endTime) {
         LocalDateTime endTime_formatted = LocalDateTime.parse(endTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
@@ -62,8 +62,9 @@ public class TestRunnerService {
         return currentTime.isAfter(endTime_formatted);
     }
 
+
     /**
-     * Переходит к следующему вопросу теста и сохраняет ответы
+     * Proceeds to the next question and saves answers.
      */
     public TestProgressDTO nextQuestion(TestProgressDTO testProgressDTO) {
         if(testProgressDTO.getAnswers() == null){
@@ -100,18 +101,12 @@ public class TestRunnerService {
         return testProgressDTO;
     }
 
-    /**
-     * Получает следующий вопрос в тесте
-     */
     private Optional<QuestionDTO> getNextQuestion(TestDTO currentTest, QuestionDTO currentQuestion) {
         return currentTest.getQuestions().stream()
                 .filter(question -> question.getQuestion_number() == currentQuestion.getQuestion_number() + 1)
                 .findFirst();
     }
 
-    /**
-     * Получает ответ по идентификатору из вопроса
-     */
     private Optional<AnswerDTO> getAnswerByIdFromTest(QuestionDTO currentQuestion, UUID answerId) {
         return currentQuestion.getAnswers().stream()
                 .filter(answer -> answer.getId().equals(answerId))

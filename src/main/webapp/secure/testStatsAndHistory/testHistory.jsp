@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Test History</title>
-    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="../../Styles.css">
 </head>
 <body>
 <div class="main-container">
@@ -23,6 +23,8 @@
                 <tr>
                     <th>#</th>
                     <th>Test Name</th>
+                    <th>Score</th>
+                    <th>Success Rate</th>
                     <th>Date</th>
                     <th>Details</th>
                 </tr>
@@ -32,6 +34,13 @@
                     <tr>
                         <td>${status.index + 1}</td>
                         <td>${result.testTitle}</td>
+                        <td>${result.score}</td>
+                        <td> <c:choose>
+                            <c:when test="${fn:length(result.resultAnswers) > 0}">
+                                <fmt:formatNumber value="${(result.score * 100.0) / fn:length(result.resultAnswers)}" type="number" maxFractionDigits="1" />%
+                            </c:when>
+                            <c:otherwise>0%</c:otherwise>
+                        </c:choose></td>
                         <td>
                             <fmt:parseDate value="${result.date}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedDate" />
                             <fmt:formatDate value="${parsedDate}" pattern="dd.MM.yyyy HH:mm" />

@@ -6,23 +6,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Add Question - TesterQuiz</title>
-  <link rel="stylesheet" href="../../../styles.css">
+  <link rel="stylesheet" href="../../../Styles.css">
 </head>
 <body>
 <div class="page page--create-test">
     <header class="header header--auth">
         <h1 class="header__title">Add Question</h1>
-        <p class="header__subtitle">Adding to: ${sessionScope.currentTest.title}</p>
+        <p class="header__subtitle">Adding to: <c:out value="${sessionScope.currentTest.title}"/></p>
     </header>
 
     <div class="test-info-card">
         <div class="test-info-item">
             <span class="test-info-label">Topic:</span>
-            <span class="test-info-value">${sessionScope.currentTest.topic}</span>
+            <span class="test-info-value"><c:out value="${sessionScope.currentTest.topic}"/></span>
         </div>
         <div class="test-info-item">
             <span class="test-info-label">Questions added:</span>
-            <span class="test-info-value">${sessionScope.currentTest.questions.size()}</span>
+            <span class="test-info-value"><c:out value="${sessionScope.currentTest.questions.size()}"/></span>
         </div>
     </div>
   <main class="main">

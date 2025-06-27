@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Test Saved - TesterQuiz</title>
-    <link rel="stylesheet" href="../../../styles.css">
+    <link rel="stylesheet" href="../../../Styles.css">
 </head>
 <body>
 <div class="page page--success">
@@ -36,15 +36,15 @@
 
 
             <div class="test-summary">
-                <h2 class="test-name">"${sessionScope.currentTest.title}"</h2>
+                <h2 class="test-name">"<c:out value="${sessionScope.currentTest.title}"/>"</h2>
                 <div class="test-details">
                     <div class="detail-item">
                         <span class="detail-label">Topic:</span>
-                        <span class="detail-value">${sessionScope.currentTest.topic}</span>
+                        <span class="detail-value"><c:out value="${sessionScope.currentTest.topic}"/></span>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Total Questions:</span>
-                        <span class="detail-value">${sessionScope.currentTest.questions.size()}</span>
+                        <span class="detail-value"><c:out value="${sessionScope.currentTest.questions.size()}"/></span>
                     </div>
                 </div>
             </div>

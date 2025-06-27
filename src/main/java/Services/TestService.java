@@ -1,9 +1,9 @@
 package Services;
 
-import Listener.ValidatorUtil;
-import dao.ITestDao;
 import dto.AnswerDTO;
 import dto.QuestionDTO;
+import validator.ValidatorUtil;
+import dao.ITestDao;
 import dto.TestDTO;
 import entity.Question;
 import entity.Test;
@@ -12,6 +12,7 @@ import exceptions.SaveException;
 import exceptions.TestDeletionFailedException;
 import exceptions.ValidationException;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,9 +25,7 @@ public class TestService {
         this.testDao = testDao;
     }
 
-    /**
-     * Создает новый тест в системе
-     */
+
     public void checkTestTitleAndValidate(TestDTO testDTO) {
         ValidatorUtil.validate(testDTO);
         if (testDao.existByTitle(testDTO.getTitle())) {
@@ -34,8 +33,9 @@ public class TestService {
         }
     }
 
+
     /**
-     * Добавляет новый вопрос к существующему тесту
+     * Adds a question to the test.
      */
     public TestDTO addQuestion(TestDTO testDTO, QuestionDTO questionDTO) {
         ValidatorUtil.validate(questionDTO);
@@ -48,7 +48,7 @@ public class TestService {
     }
 
     /**
-     * Удаляет тест из системы по идентификатору
+     * Deletes a test by its id.
      */
     public void deleteTest(UUID testId) {
         try {
@@ -59,7 +59,7 @@ public class TestService {
     }
 
     /**
-     * Находит тест по идентификатору
+     * Finds a test by its id (as string).
      */
     public TestDTO findById(String id) {
         if(id == null || id.isEmpty()){
@@ -71,18 +71,22 @@ public class TestService {
         }
         return testDTO;
     }
-
+    
     /**
-     * Получает список всех тестов в формате DTO
+     * Returns all tests as DTOs.
      */
     public List<TestDTO> findAllTestsDTO() {
-        return testDao.findAll().stream()
+        List<Test> tests = testDao.findAll();
+        if (tests == null) {
+            return Collections.emptyList();
+        }
+        return tests.stream()
                 .map(Test::toDTO)
                 .collect(Collectors.toList());
     }
 
     /**
-     * Обновляет текст вопроса и список ответов на вопрос
+     * Updates a question in the test.
      */
     public TestDTO updateQuestion(UUID testId, QuestionDTO questionDTO) {
         ValidatorUtil.validate(questionDTO);
@@ -106,6 +110,9 @@ public class TestService {
         }
     }
 
+    /**
+     * Saves a test (validates and persists).
+     */
     public void saveTest(TestDTO testDTO) {
         ValidatorUtil.validate(testDTO);
         if (testDTO.getQuestions() == null || testDTO.getQuestions().isEmpty()) {
@@ -129,6 +136,9 @@ public class TestService {
         }
     }
 
+    /**
+     * Updates test title and topic.
+     */
     public TestDTO updateTestDetails(UUID testId, String newTitle, String newTopic) {
         Test test = findTestByIdOrThrow(testId);
 
@@ -148,6 +158,7 @@ public class TestService {
         } catch (DataAccessException e) {
             throw new SaveException("Failed to save test.");
         }
+        ValidatorUtil.validate(test.toDTO());
         return test.toDTO();
     }
 

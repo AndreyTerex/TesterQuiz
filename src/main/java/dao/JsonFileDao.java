@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -54,6 +53,9 @@ public class JsonFileDao<T> {
         }
     }
 
+    /**
+     * Returns all objects from the storage.
+     */
     public List<T> findAll() {
         lock.readLock().lock();
         try {
@@ -78,6 +80,9 @@ public class JsonFileDao<T> {
         }
     }
 
+    /**
+     * Writes all objects to the storage.
+     */
     public void writeAll(List<T> list) {
         lock.writeLock().lock();
         try {
@@ -93,6 +98,9 @@ public class JsonFileDao<T> {
         }
     }
 
+    /**
+     * Adds a new object to the storage.
+     */
     public void add(T t) {
         lock.writeLock().lock();
         try {
@@ -105,6 +113,9 @@ public class JsonFileDao<T> {
     }
 
 
+    /**
+     * Saves an object to a unique file in the given directory.
+     */
     public void saveToUniqueFile(T object, File directory, String filenamePrefix) {
         lock.writeLock().lock();
         try {
@@ -122,6 +133,9 @@ public class JsonFileDao<T> {
         }
     }
 
+    /**
+     * Deletes a unique file from the storage.
+     */
     public void deleteUniqueFile(File file) {
         lock.writeLock().lock();
         try {

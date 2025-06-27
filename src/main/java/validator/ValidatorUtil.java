@@ -1,4 +1,4 @@
-package Listener;
+package validator;
 
 import exceptions.ValidationException;
 import jakarta.validation.ConstraintViolation;
@@ -16,12 +16,18 @@ public class ValidatorUtil {
 
     private ValidatorUtil() {}
 
+    /**
+     * Initializes the validator context.
+     */
     public static void init() {
         if (validatorFactory == null) {
             validatorFactory = Validation.buildDefaultValidatorFactory();
         }
     }
 
+    /**
+     * Returns the Validator instance.
+     */
     public static Validator getValidator() {
         if (validatorFactory == null) {
             throw new IllegalStateException("ValidatorFactory has not been initialized.");
@@ -29,13 +35,22 @@ public class ValidatorUtil {
         return validatorFactory.getValidator();
     }
 
+    /**
+     * Closes the validator context.
+     */
     public static void close() {
         if (validatorFactory != null) {
             validatorFactory.close();
         }
     }
 
+    /**
+     * Validates the given DTO object.
+     */
     public static <T> void validate(T dto) {
+        if (dto == null) {
+            throw new ValidationException("Incorrect data received for processing.");
+        }
         Validator validator = getValidator();
         Set<ConstraintViolation<T>> violations = validator.validate(dto);
         if (!violations.isEmpty()) {

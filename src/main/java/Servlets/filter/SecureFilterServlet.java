@@ -1,5 +1,4 @@
-package filter;
-
+package Servlets.filter;
 import constants.ServletPaths;
 import dto.UserDTO;
 import jakarta.servlet.*;
@@ -11,9 +10,6 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-/**
- * Фильтр безопасности для защищенных страниц
- */
 @WebFilter(urlPatterns = ServletPaths.SECURE_FILTER_PATTERN)
 public class SecureFilterServlet extends HttpFilter {
     
