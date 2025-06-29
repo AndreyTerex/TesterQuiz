@@ -54,7 +54,7 @@ public class TestService {
         try {
             testDao.deleteById(testId);
         } catch (DataAccessException e){
-            throw new TestDeletionFailedException("Failed to delete test with id " + testId);
+            throw new TestDeletionFailedException("Failed to delete test with id " + testId, e);
         }
     }
 
@@ -102,7 +102,7 @@ public class TestService {
             try {
                 testDao.saveUniqueTest(test);
             } catch (DataAccessException e) {
-                throw new SaveException("Failed to save test.");
+                throw new SaveException("Failed to save test.", e);
             }
             return test.toDTO();
         } else {
@@ -132,7 +132,7 @@ public class TestService {
         try {
             testDao.saveUniqueTest(test);
         } catch (DataAccessException e) {
-            throw new SaveException("Failed to save test.");
+            throw new SaveException("Failed to save test.", e);
         }
     }
 
@@ -156,7 +156,7 @@ public class TestService {
         try {
             testDao.saveUniqueTest(test);
         } catch (DataAccessException e) {
-            throw new SaveException("Failed to save test.");
+            throw new SaveException("Failed to save test.", e);
         }
         ValidatorUtil.validate(test.toDTO());
         return test.toDTO();

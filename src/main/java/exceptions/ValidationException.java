@@ -31,4 +31,8 @@ public class ValidationException extends RuntimeException {
         this.errors = Collections.unmodifiableList(errors);
     }
 
+    public ValidationException(String message, Throwable cause) {
+        super(message, cause);
+        this.errors = Collections.singletonList(message);
+    }
 }

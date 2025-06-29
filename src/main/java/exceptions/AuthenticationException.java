@@ -17,4 +17,9 @@ public class AuthenticationException extends RuntimeException {
         super(errors.isEmpty() ? "Authentication failed" : errors.getFirst());
         this.errors = Collections.unmodifiableList(errors);
     }
+
+    public AuthenticationException(String message, Throwable cause) {
+        super(message, cause);
+        this.errors = Collections.singletonList(message);
+    }
 }

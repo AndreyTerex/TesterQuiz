@@ -46,11 +46,11 @@ public class ResultDao implements IResultDao {
      * Saves a result and updates all caches.
      */
     public void save(Result result) {
+        logger.debug("Saving new result for test_id: {} and user_id: {}", result.getTest_id(), result.getUser_id());
         baseDao.add(result);
         resultMap.put(result.getId(), result);
         resultsByTestIdMap.computeIfAbsent(result.getTest_id(), k -> new CopyOnWriteArrayList<>()).add(result);
         resultsByUserIdMap.computeIfAbsent(result.getUser_id(), k -> new CopyOnWriteArrayList<>()).add(result);
-
     }
 
     /**

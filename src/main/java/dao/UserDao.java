@@ -33,8 +33,14 @@ public class UserDao implements IUserDao {
      * Finds a user by username.
      */
     public Optional<User> findByUsername(String username) {
-        if (username == null) { return Optional.empty(); }
-        return Optional.ofNullable(userMap.get(username));
+        logger.debug("Attempting to find user by username: {}", username);
+        if (username == null) {
+            logger.warn("Attempt to find user with null username");
+            return Optional.empty();
+        }
+        Optional<User> user = Optional.ofNullable(userMap.get(username));
+        user.ifPresent(u -> logger.debug("User found: {}", username));
+        return user;
     }
 
     /**

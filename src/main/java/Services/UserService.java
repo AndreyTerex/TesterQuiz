@@ -57,7 +57,7 @@ public class UserService {
         try {
             userDao.add(user);
         }catch (DataAccessException e){
-            throw new RegistrationException("Failed to register user");
+            throw new RegistrationException("Failed to register user", e);
         }
         return user.toDTO();
     }

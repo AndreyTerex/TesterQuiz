@@ -44,7 +44,7 @@ public class ResultService {
         try {
             resultDao.save(resultDTO.toEntity());
         } catch (DataAccessException e) {
-            throw new SaveException("Failed to save result");
+            throw new SaveException("Failed to save result", e);
         }
     }
 

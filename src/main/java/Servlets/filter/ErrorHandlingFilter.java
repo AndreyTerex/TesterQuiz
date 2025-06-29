@@ -37,13 +37,7 @@ public class ErrorHandlingFilter extends HttpFilter {
             req.getSession().setAttribute("error", e.getMessage());
             resp.sendRedirect("/register");
 
-        } catch (ResourceNotFoundException e) {
-            logger.warn("Resource not found for request {}: {}", req.getRequestURI(), e.getMessage());
-
-            req.getSession().setAttribute("error", e.getMessage());
-            String referer = req.getHeader("Referer");
-            resp.sendRedirect(referer != null ? referer : "/");
-        }catch (SaveException e) {
+        } catch (SaveException e) {
             logger.warn("Save operation failed for request {}: {}", req.getRequestURI(), e.getMessage());
 
             req.getSession().setAttribute("error", e.getMessage());

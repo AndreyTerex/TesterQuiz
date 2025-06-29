@@ -34,8 +34,10 @@ public class TestDao implements ITestDao {
      * Saves or updates a test in the cache and base storage.
      */
     public void save(Test build) {
+        logger.debug("Saving test with id: {}", build.getId());
         testsMap.put(build.getId(),build);
         baseDao.writeAll(new ArrayList<>(testsMap.values()));
+        logger.info("Test with id: {} saved successfully.", build.getId());
     }
 
     /**
