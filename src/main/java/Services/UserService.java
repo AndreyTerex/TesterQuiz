@@ -21,7 +21,7 @@ public class UserService {
     private static final int MIN_PASSWORD_LENGTH = 8;
 
     private static final int MAX_FAILED_ATTEMPTS = 5;
-    private static final long BLOCK_TIME_MILLIS = 10 * 60 * 1000; // 10 минут
+    private static final long BLOCK_TIME_MILLIS = 10 * 60 * 1000; // 10 minutes
     private final java.util.Map<String, Integer> failedAttempts = new ConcurrentHashMap<>();
     private final java.util.Map<String, Long> blockedUsers = new ConcurrentHashMap<>();
 

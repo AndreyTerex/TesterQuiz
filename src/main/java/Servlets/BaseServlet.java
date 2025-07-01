@@ -27,7 +27,7 @@ public class BaseServlet extends HttpServlet {
     protected TestRunnerService testRunnerService;
 
     /**
-     * Инициализирует базовый сервлет и получает сервисы из контекста приложения
+     * Initializes the base servlet and gets services from the application context
      */
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -40,7 +40,7 @@ public class BaseServlet extends HttpServlet {
     }
 
     /**
-     * Получает текущего пользователя из HTTP сессии
+     * Gets the current user from the HTTP session
      */
     protected UserDTO getCurrentUser(HttpServletRequest request) {
         HttpSession session = request.getSession();
@@ -48,14 +48,14 @@ public class BaseServlet extends HttpServlet {
     }
 
     /**
-     * Проверяет, аутентифицирован ли пользователь
+     * Checks if the user is authenticated
      */
     protected boolean isUserAuthenticated(HttpServletRequest request) {
         return getCurrentUser(request) != null;
     }
 
     /**
-     * Проверяет, имеет ли пользователь права администратора
+     * Checks if the user has administrator rights
      */
     protected boolean isAdmin(HttpServletRequest request) {
         UserDTO user = getCurrentUser(request);
@@ -63,21 +63,21 @@ public class BaseServlet extends HttpServlet {
     }
 
     /**
-     * Устанавливает сообщение об ошибке в HTTP сессию
+     * Sets an error message in the HTTP session
      */
     protected void setSessionError(HttpServletRequest request, String errorMessage) {
         request.getSession().setAttribute("error", errorMessage);
     }
 
     /**
-     * Устанавливает сообщение об успехе в HTTP сессию
+     * Sets a success message in the HTTP session
      */
     protected void setSessionSuccess(HttpServletRequest request, String successMessage) {
         request.getSession().setAttribute("success", successMessage);
     }
 
     /**
-     * Перенаправляет пользователя с сообщением об ошибке
+     * Redirects the user with an error message
      */
     protected void redirectWithError(HttpServletRequest request, HttpServletResponse response,
                                      String errorMessage, String redirectPath) throws  IOException {
@@ -87,7 +87,7 @@ public class BaseServlet extends HttpServlet {
 
 
     /**
-     * Отправляет JSON ответ клиенту
+     * Sends a JSON response to the client
      */
     protected void sendJsonResponse(HttpServletResponse response, Object data) throws IOException {
         response.setContentType("application/json");
@@ -96,7 +96,7 @@ public class BaseServlet extends HttpServlet {
     }
 
     /**
-     * Проверяет аутентификацию и перенаправляет на страницу входа при необходимости
+     * Checks authentication and redirects to the login page if necessary
      */
     protected boolean checkAuthenticationAndRedirect(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!isUserAuthenticated(request)) {
@@ -107,7 +107,7 @@ public class BaseServlet extends HttpServlet {
     }
 
     /**
-     * Проверяет права администратора и отправляет ошибку 403 при отсутствии прав
+     * Checks for administrator rights and sends a 403 error if rights are missing
      */
     protected boolean checkAdminRightsAndSendError(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!isAdmin(request)) {
@@ -118,14 +118,14 @@ public class BaseServlet extends HttpServlet {
     }
 
     /**
-     * Перенаправляет пользователя на указанный путь
+     * Redirects the user to the specified path
      */
     protected void redirectTo(HttpServletResponse response, String path) throws IOException {
         response.sendRedirect(path);
     }
 
     /**
-     * Пересылает запрос на указанный путь
+     * Forwards the request to the specified path
      */
     protected void forwardTo(HttpServletRequest request, HttpServletResponse response, String path)
             throws ServletException, IOException {
@@ -133,14 +133,14 @@ public class BaseServlet extends HttpServlet {
     }
 
     /**
-     * Устанавливает текущего пользователя в HTTP сессию
+     * Sets the current user in the HTTP session
      */
     protected void setCurrentUser(HttpServletRequest request, UserDTO user) {
         request.getSession().setAttribute("user", user);
     }
 
     /**
-     * Устанавливает атрибуты сессии для прохождения теста
+     * Sets session attributes for passing a test
      */
     protected void setTestSessionAttributes(HttpServletRequest request, dto.TestSessionDTO sessionAttributes) {
         HttpSession session = request.getSession();
@@ -150,7 +150,7 @@ public class BaseServlet extends HttpServlet {
     }
 
     /**
-     * Обновляет атрибуты сессии в процессе прохождения теста
+     * Updates session attributes during a test
      */
     protected void updateTestProgress(HttpServletRequest request, dto.TestProgressDTO testProgress) {
         HttpSession session = request.getSession();
@@ -161,14 +161,14 @@ public class BaseServlet extends HttpServlet {
     }
 
     /**
-     * Устанавливает текущий тест в сессию
+     * Sets the current test in the session
      */
     protected void setCurrentTest(HttpServletRequest request, dto.TestDTO test) {
         request.getSession().setAttribute("currentTest", test);
     }
     
     /**
-     * Получает параметр из запроса с проверкой на пустоту
+     * Gets a parameter from the request with a check for emptiness
      */
     protected String getParam(HttpServletRequest request, String paramName) {
         String value = request.getParameter(paramName);
@@ -176,9 +176,9 @@ public class BaseServlet extends HttpServlet {
     }
 
     /**
-     * Очищает сессию от ненужных данных.
-     * Удаляет временные данные, связанные с прохождением тестов и создании тестов,
-     * но сохраняет важную информацию о пользователе, error massage и success message.
+     * Clears the session of unnecessary data.
+     * Removes temporary data related to passing and creating tests,
+     * but keeps important user information, error messages, and success messages.
      */
     protected void clearSessionData(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -192,7 +192,7 @@ public class BaseServlet extends HttpServlet {
     }
 
     /**
-     * Извлекает список ответов из HTTP запроса
+     * Extracts a list of answers from the HTTP request
      */
     protected List<AnswerDTO> extractAnswersFromRequest(HttpServletRequest request) {
         List<dto.AnswerDTO> answerDTOList = new ArrayList<>();
@@ -216,7 +216,7 @@ public class BaseServlet extends HttpServlet {
     }
 
     /**
-     * Проверяет, есть ли хотя бы один правильный ответ в списке
+     * Checks if there is at least one correct answer in the list
      */
     protected boolean hasCorrectAnswer(List<AnswerDTO> answerDTOList) {
         return answerDTOList.stream().anyMatch(AnswerDTO::isCorrect);

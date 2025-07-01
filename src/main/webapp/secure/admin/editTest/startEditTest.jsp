@@ -50,12 +50,12 @@
 
       <div class="form-actions">
         <button type="button" class="btn btn--secondary" onclick="window.location.href='/secure/tests.jsp'">
-          Отменить
+          Cancel
         </button>
         <button type="button" class="btn btn--info" onclick="window.location.href='editQuestionsMenu.jsp'">
-          Продолжить без редактирования
+          Continue without editing
         </button>
-        <button type="submit" class="btn btn--primary">Редактировать title и topic</button>
+        <button type="submit" class="btn btn--primary">Edit title and topic</button>
       </div>
     </form>
   </main>

@@ -6,9 +6,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Исключение, которое выбрасывается, когда данные не проходят бизнес-валидацию.
- * Это исключение способно хранить в себе список всех ошибок валидации,
- * чтобы их можно было удобно отобразить пользователю.
+ * An exception that is thrown when data fails business validation.
+ * This exception can store a list of all validation errors
+ * so that they can be conveniently displayed to the user.
  */
 @Getter
 public class ValidationException extends RuntimeException {
@@ -16,7 +16,7 @@ public class ValidationException extends RuntimeException {
     private final List<String> errors;
 
     /**
-     * Конструктор для одной ошибки.
+     * Constructor for a single error.
      */
     public ValidationException(String message) {
         super(message);
@@ -24,7 +24,7 @@ public class ValidationException extends RuntimeException {
     }
 
     /**
-     * Конструктор для нескольких ошибок.
+     * Constructor for multiple errors.
      */
     public ValidationException(List<String> errors) {
         super(errors.isEmpty() ? "Validation failed" : errors.getFirst());

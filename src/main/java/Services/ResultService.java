@@ -24,7 +24,7 @@ public class ResultService {
     }
 
     /**
-     * Создает объект результата теста
+     * Creates a test result object
      */
     public Result buildResultObject(Test test, UUID userid, LocalDateTime startTime) {
         return Result.builder()
@@ -38,7 +38,7 @@ public class ResultService {
     }
 
     /**
-     * Сохраняет результат прохождения теста
+     * Saves the result of passing the test
      */
     public void saveResult(ResultDTO resultDTO) {
         try {
@@ -50,7 +50,7 @@ public class ResultService {
 
 
     /**
-     * Вычисляет итоговый балл за тест
+     * Calculates the final score for the test
      */
     public Result calculateScoreResult(Result result) {
         int score = 0;
