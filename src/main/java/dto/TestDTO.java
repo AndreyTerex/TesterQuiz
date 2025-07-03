@@ -28,16 +28,16 @@ public class TestDTO {
     @Pattern(regexp = "^[a-zA-Z0-9а-яА-Я ]+$", message = "Topic can only contain letters, numbers, and spaces.")
     private String topic;
     private UUID id;
-    private UUID creator_id;
+    private UUID creatorId;
     private List<QuestionDTO> questions;
 
 
-    public Test toEntity(){
+    public Test toEntity() {
         return Test.builder()
                 .title(title)
                 .topic(topic)
                 .id(id)
-                .creator_id(creator_id)
+                .creatorId(creatorId)
                 .questions(questions.stream()
                         .map(QuestionDTO::toEntity)
                         .collect(Collectors.toCollection(ArrayList::new)))

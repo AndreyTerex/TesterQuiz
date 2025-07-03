@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 @Builder
 public class Result {
     private UUID id;
-    private UUID user_id;
-    private UUID test_id;
+    private UUID userId;
+    private UUID testId;
     private String testTitle;
     private Integer score;
     private LocalDateTime date;
@@ -29,8 +29,8 @@ public class Result {
     public ResultDTO toDTO() {
         return ResultDTO.builder()
                 .id(id)
-                .user_id(user_id)
-                .test_id(test_id)
+                .userId(userId)
+                .testId(testId)
                 .score(score)
                 .date(date)
                 .testTitle(testTitle)

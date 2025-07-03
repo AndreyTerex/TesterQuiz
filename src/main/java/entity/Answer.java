@@ -14,13 +14,13 @@ import java.util.UUID;
 @Builder
 public class Answer {
     private UUID id;
-    private String answer_text;
+    private String answerText;
     private boolean isCorrect;
 
     public AnswerDTO toDTO() {
         return AnswerDTO.builder()
                 .id(id)
-                .answer_text(answer_text)
+                .answerText(answerText)
                 .isCorrect(isCorrect)
                 .build();
     }

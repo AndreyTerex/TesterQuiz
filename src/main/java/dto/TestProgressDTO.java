@@ -10,7 +10,7 @@ import lombok.Data;
 public class TestProgressDTO {
     private ResultDTO result;
     private QuestionDTO question;
-    private String [] answers;
+    private String[] answers;
     private boolean isTestFinished;
 
 

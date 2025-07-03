@@ -7,7 +7,7 @@ Welcome to TesterQuiz! This is my educational project, created to practice and d
 This project was a great opportunity to dive deep into the following technologies and concepts:
 
 *   **Core Java & Backend Logic:** Building the application's foundation with Java.
-*   **Servlets & JSP:** Handling web requests and creating dynamic web pages.
+*   **servlets & JSP:** Handling web requests and creating dynamic web pages.
 *   **JSTL:** Simplifying JSP pages and keeping the code clean.
 *   **Database Interaction:** Working with a file-based database to store user and test data.
 *   **Authentication & Authorization:** Implementing a secure login system with user roles.
@@ -23,7 +23,7 @@ This project was a great opportunity to dive deep into the following technologie
 
 ## 🛠️ Tech Stack
 
-*   **Backend:** Java, Servlets, JSP, JSTL
+*   **Backend:** Java, servlets, JSP, JSTL
 *   **Frontend:** HTML, CSS
 *   **Build Tool:** Maven
 *   **Web Server:** Tomcat

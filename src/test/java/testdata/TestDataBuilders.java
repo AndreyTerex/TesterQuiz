@@ -14,7 +14,7 @@ public class TestDataBuilders {
 
     public static AnswerDTO correctAnswer(String text) {
         return AnswerDTO.builder()
-                .answer_text(text)
+                .answerText(text)
                 .isCorrect(true)
                 .build();
     }
@@ -22,7 +22,7 @@ public class TestDataBuilders {
     public static AnswerDTO correctAnswerWithId(String text, UUID id) {
         return AnswerDTO.builder()
                 .id(id)
-                .answer_text(text)
+                .answerText(text)
                 .isCorrect(true)
                 .build();
     }
@@ -30,29 +30,29 @@ public class TestDataBuilders {
     public static QuestionDTO questionWithAnswerAndAnswerId(String questionText, String answerText, UUID questionId, int questionNumber, UUID answerId) {
         return QuestionDTO.builder()
                 .id(questionId)
-                .question_text(questionText)
-                .question_number(questionNumber)
+                .questionText(questionText)
+                .questionNumber(questionNumber)
                 .answers(new ArrayList<>(List.of(correctAnswerWithId(answerText, answerId))))
                 .build();
     }
 
     public static AnswerDTO incorrectAnswer(String text) {
         return AnswerDTO.builder()
-                .answer_text(text)
+                .answerText(text)
                 .isCorrect(false)
                 .build();
     }
 
     public static QuestionDTO simpleQuestion(String text) {
         return QuestionDTO.builder()
-                .question_text(text)
+                .questionText(text)
                 .answers(new ArrayList<>(List.of(correctAnswer("Correct Answer"))))
                 .build();
     }
 
     public static QuestionDTO questionWithAnswer(String questionText, String answerText) {
         return   QuestionDTO.builder()
-                .question_text(questionText)
+                .questionText(questionText)
                 .answers(new ArrayList<>(List.of(correctAnswer(answerText))))
                 .build();
     }
@@ -60,21 +60,21 @@ public class TestDataBuilders {
     public static QuestionDTO questionWithId(UUID id, String text) {
         return   QuestionDTO.builder()
                 .id(id)
-                .question_text(text)
+                .questionText(text)
                 .answers(new ArrayList<>(List.of(correctAnswer("Correct Answer"))))
                 .build();
     }
 
     public static QuestionDTO questionWithNoAnswers(String text) {
         return   QuestionDTO.builder()
-                .question_text(text)
+                .questionText(text)
                 .answers(new ArrayList<>())
                 .build();
     }
 
     public static QuestionDTO questionWithIncorrectAnswers(String text) {
         return QuestionDTO.builder()
-                .question_text(text)
+                .questionText(text)
                 .answers(new ArrayList<>(List.of(incorrectAnswer("Wrong Answer"))))
                 .build();
     }
@@ -105,7 +105,7 @@ public class TestDataBuilders {
 
     public static Answer correctAnswerEntity(String text) {
         return Answer.builder()
-                .answer_text(text)
+                .answerText(text)
                 .isCorrect(true)
                 .build();
     }
@@ -113,7 +113,7 @@ public class TestDataBuilders {
     public static Answer answerEntityWithId(String text, boolean isCorrect, UUID id) {
         return Answer.builder()
                 .id(id)
-                .answer_text(text)
+                .answerText(text)
                 .isCorrect(isCorrect)
                 .build();
     }
@@ -121,15 +121,15 @@ public class TestDataBuilders {
     public static Question questionEntityWithIdAndAnswers(UUID id, String text, int number, List<Answer> answers) {
         return Question.builder()
                 .id(id)
-                .question_text(text)
-                .question_number(number)
+                .questionText(text)
+                .questionNumber(number)
                 .answers(answers)
                 .build();
     }
 
     public static ResultDTO resultDTOWithTestId(UUID testId) {
         return ResultDTO.builder()
-                .test_id(testId)
+                .testId(testId)
                 .resultAnswers(new ArrayList<>())
                 .build();
     }
@@ -137,7 +137,7 @@ public class TestDataBuilders {
     public static Question questionEntity(UUID id, String text) {
         return Question.builder()
                 .id(id)
-                .question_text(text)
+                .questionText(text)
                 .answers(new ArrayList<>(List.of(correctAnswerEntity("Old answer"))))
                 .build();
     }
@@ -202,8 +202,8 @@ public class TestDataBuilders {
     public static Result newResult(UUID resultId, UUID userId, UUID testId, List<ResultAnswer> resultAnswers, Integer score, java.time.LocalDateTime date) {
         return Result.builder()
                 .id(resultId)
-                .user_id(userId)
-                .test_id(testId)
+                .userId(userId)
+                .testId(testId)
                 .resultAnswers(resultAnswers != null ? resultAnswers : new ArrayList<>())
                 .score(score)
                 .date(date)
@@ -212,8 +212,8 @@ public class TestDataBuilders {
     public static Result resultWithDateAndScore(UUID id, UUID userId, UUID testId, List<ResultAnswer> resultAnswers, Integer score, java.time.LocalDateTime date) {
         return Result.builder()
                 .id(id)
-                .user_id(userId)
-                .test_id(testId)
+                .userId(userId)
+                .testId(testId)
                 .resultAnswers(resultAnswers != null ? resultAnswers : new ArrayList<>())
                 .score(score)
                 .date(date)

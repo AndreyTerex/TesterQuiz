@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Test Result Details</title>
-    <link rel="stylesheet" href="../../Styles.css">
+    <link rel="stylesheet" href="../../styles.css">
 </head>
 <body>
 <div class="main-container">

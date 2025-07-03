@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>Test Statistics</title>
-    <link rel="stylesheet" href="/Styles.css">
+    <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
 <div class="main-container">

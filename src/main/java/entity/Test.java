@@ -20,7 +20,7 @@ public class Test {
     private String title;
     private String topic;
     private UUID id;
-    private UUID creator_id;
+    private UUID creatorId;
     private List<Question> questions;
 
     @Override
@@ -40,7 +40,7 @@ public class Test {
                 .title(title)
                 .topic(topic)
                 .id(id)
-                .creator_id(creator_id)
+                .creatorId(creatorId)
                 .questions(questions.stream()
                         .map(Question::toDTO)
                         .collect(Collectors.toCollection(ArrayList::new)))

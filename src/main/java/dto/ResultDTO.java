@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 public class ResultDTO {
     private UUID id;
     @NotNull(message = "User ID cannot be null.")
-    private UUID user_id;
+    private UUID userId;
     @NotNull(message = "Test ID cannot be null.")
-    private UUID test_id;
+    private UUID testId;
     @NotNull(message = "Score cannot be null.")
     @Min(value = 0, message = "Score cannot be negative.")
     private Integer score;
@@ -36,8 +36,8 @@ public class ResultDTO {
     public Result toEntity() {
         return Result.builder()
                 .id(id)
-                .user_id(user_id)
-                .test_id(test_id)
+                .userId(userId)
+                .testId(testId)
                 .score(score)
                 .date(date)
                 .testTitle(testTitle)

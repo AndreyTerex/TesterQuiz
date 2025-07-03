@@ -18,7 +18,7 @@ public class ResultAnswerDTO {
     private QuestionDTO question;
     private List<AnswerDTO> selectedAnswers;
 
-    public ResultAnswer toEntity(){
+    public ResultAnswer toEntity() {
         return ResultAnswer.builder()
                 .question(question.toEntity())
                 .selectedAnswers(selectedAnswers.stream()

@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Oops! Something went wrong</title>
-    <link rel="stylesheet" type="text/css" href="Styles.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
     <div class="error-container">

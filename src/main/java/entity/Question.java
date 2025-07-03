@@ -17,15 +17,15 @@ import java.util.stream.Collectors;
 @Builder
 public class Question {
     private UUID id;
-    private Integer question_number;
-    private String question_text;
+    private Integer questionNumber;
+    private String questionText;
     private List<Answer> answers;
 
     public QuestionDTO toDTO() {
         return QuestionDTO.builder()
                 .id(id)
-                .question_number(question_number)
-                .question_text(question_text)
+                .questionNumber(questionNumber)
+                .questionText(questionText)
                 .answers(answers.stream()
                         .map(Answer::toDTO)
                         .collect(Collectors.toCollection(ArrayList::new)))
