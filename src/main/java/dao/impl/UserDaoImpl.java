@@ -1,21 +1,22 @@
 package dao.impl;
 
+import dao.JsonFileDao;
 import dao.UserDao;
 import entity.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 public class UserDaoImpl implements UserDao {
-    private static final Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
-    private final JsonFileDaoImpl<User> baseDao;
+    private final JsonFileDao<User> baseDao;
     private final Map<String, User> userMap;
 
-    public UserDaoImpl(JsonFileDaoImpl<User> baseDao) {
+    public UserDaoImpl(JsonFileDao<User> baseDao) {
         this.baseDao = baseDao;
         userMap = new ConcurrentHashMap<>();
         loadUserCache();
@@ -27,7 +28,7 @@ public class UserDaoImpl implements UserDao {
         for (User user : allUsers) {
             userMap.put(user.getUsername(), user);
         }
-        logger.info("Users cache refreshed");
+        log.info("Users cache refreshed");
 
     }
 
@@ -35,13 +36,13 @@ public class UserDaoImpl implements UserDao {
      * Finds a user by username.
      */
     public Optional<User> findByUsername(String username) {
-        logger.debug("Attempting to find user by username: {}", username);
+        log.debug("Attempting to find user by username: {}", username);
         if (username == null) {
-            logger.warn("Attempt to find user with null username");
+            log.warn("Attempt to find user with null username");
             return Optional.empty();
         }
         Optional<User> user = Optional.ofNullable(userMap.get(username));
-        user.ifPresent(u -> logger.debug("User found: {}", username));
+        user.ifPresent(u -> log.debug("User found: {}", username));
         return user;
     }
 
@@ -51,6 +52,6 @@ public class UserDaoImpl implements UserDao {
     public void add(User build) {
         baseDao.add(build);
         userMap.put(build.getUsername(), build);
-        logger.debug("User '{}' added to cache.", build.getUsername());
+        log.debug("User '{}' added to cache.", build.getUsername());
     }
 }

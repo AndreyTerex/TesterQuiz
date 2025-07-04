@@ -12,7 +12,7 @@ import static org.mockito.Mockito.*;
 
 @DisplayName("TestDaoImpl CRUD and cache Tests")
 class TestDaoTestImpl {
-    private JsonFileDaoImpl<entity.Test> baseDao;
+    private JsonFileDao<entity.Test> baseDao;
     private TestDaoImpl testDaoImpl;
     private String realPath;
 

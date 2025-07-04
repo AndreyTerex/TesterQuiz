@@ -51,8 +51,8 @@
                 <tbody>
                     <c:forEach var="question" items="${sessionScope.currentTest.questions}" varStatus="status">
                         <tr>
-                            <td class="question-number"><c:out value="${question.question_number}"/></td>
-                            <td class="question-text"><c:out value="${question.question_text}"/></td>
+                            <td class="question-number"><c:out value="${question.questionNumber}"/></td>
+                            <td class="question-text"><c:out value="${question.questionText}"/></td>
                             <td class="actions">
                                 <button class="edit-btn" onclick="editQuestion('${question.id}')">Edit Question</button>
                             </td>

@@ -33,7 +33,7 @@
             </div>
 
             <div class="time-section">
-                <h4>You've got 10 mins to do this test. Good Luck!</h4>
+                <h4>You've got 10 minutes to do this test. Good Luck!</h4>
             </div>
 
             <div>

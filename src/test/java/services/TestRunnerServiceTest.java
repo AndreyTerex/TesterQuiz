@@ -10,7 +10,8 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import validator.ValidatorUtil;
+import validators.ValidatorTestRunnerService;
+import validators.ValidatorUtil;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -32,6 +33,9 @@ public class TestRunnerServiceTest {
     @Mock
     private ResultService resultService;
 
+    @Mock
+    private ValidatorTestRunnerService validatorTestRunnerService;
+
     private TestRunnerService testRunnerService;
 
     @BeforeAll
@@ -46,7 +50,7 @@ public class TestRunnerServiceTest {
 
     @BeforeEach
     void setUp() {
-        testRunnerService = new TestRunnerService(testDao, resultService);
+        testRunnerService = new TestRunnerService(testDao, resultService,validatorTestRunnerService);
     }
 
     @Nested
@@ -95,12 +99,13 @@ public class TestRunnerServiceTest {
             UserDTO userDTO = userDTO(UUID.randomUUID(), null, null);
 
             when(testDao.findById(testId)).thenReturn(null);
+            doCallRealMethod().when(validatorTestRunnerService).validateTestSessionStart(null, userDTO);
 
             // ACT & ASSERT
             ValidationException exception = assertThrows(ValidationException.class,
                     () -> testRunnerService.startTest(testId, userDTO));
 
-            assertEquals("Test with id " + testId + " not found", exception.getMessage());
+            assertEquals("Test not found", exception.getMessage());
             verify(testDao).findById(testId);
             verifyNoInteractions(resultService);
         }
@@ -110,8 +115,10 @@ public class TestRunnerServiceTest {
         void startTestUserNull() {
             // ARRANGE
             UUID testId = UUID.randomUUID();
+            entity.Test test = new entity.Test();
 
-            when(testDao.findById(testId)).thenReturn(new entity.Test());
+            when(testDao.findById(testId)).thenReturn(test);
+            doCallRealMethod().when(validatorTestRunnerService).validateTestSessionStart(test, null);
 
             // ACT & ASSERT
             ValidationException exception = assertThrows(ValidationException.class,
@@ -132,6 +139,7 @@ public class TestRunnerServiceTest {
             entity.Test test = testEntityFull(testId, "Test Title", null, Collections.emptyList());
 
             when(testDao.findById(testId)).thenReturn(test);
+            doNothing().when(validatorTestRunnerService).validateTestSessionStart(test, userDTO);
 
             // ACT & ASSERT
             ValidationException exception = assertThrows(ValidationException.class,
@@ -151,7 +159,7 @@ public class TestRunnerServiceTest {
         void checkTimeEnded() {
             // ARRANGE
             LocalDateTime pastTime = LocalDateTime.now().minusMinutes(5);
-            String pastTimeString = pastTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+            String pastTimeString = pastTime.format(DateTimeFormatter.ISO_DATE_TIME);
 
             // ACT
             boolean result = testRunnerService.checkTimeIsEnded(pastTimeString);
@@ -165,7 +173,7 @@ public class TestRunnerServiceTest {
         void checkTimeNotEnded() {
             // ARRANGE
             LocalDateTime futureTime = LocalDateTime.now().plusMinutes(5);
-            String futureTimeString = futureTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+            String futureTimeString = futureTime.format(DateTimeFormatter.ISO_DATE_TIME);
 
             // ACT
             boolean result = testRunnerService.checkTimeIsEnded(futureTimeString);
@@ -273,15 +281,23 @@ public class TestRunnerServiceTest {
         @DisplayName("Should throw exception when answers not selected")
         void nextQuestionNoAnswers() {
             // ARRANGE
+            ResultDTO mockResult = mock(ResultDTO.class);
+            QuestionDTO mockQuestion = mock(QuestionDTO.class);
+
             TestProgressDTO testProgressDTO = TestProgressDTO.builder()
+                    .result(mockResult)
+                    .question(mockQuestion)
                     .answers(null)
                     .build();
+
+            doCallRealMethod().when(validatorTestRunnerService).validateTestProgressDTO(any(TestProgressDTO.class));
 
             // ACT & ASSERT
             ValidationException exception = assertThrows(ValidationException.class,
                     () -> testRunnerService.nextQuestion(testProgressDTO));
 
             assertEquals("Answers are not selected", exception.getMessage());
+
             verifyNoInteractions(testDao);
             verifyNoInteractions(resultService);
         }
@@ -291,23 +307,26 @@ public class TestRunnerServiceTest {
         void nextQuestionTestNotFound() {
             // ARRANGE
             UUID testId = UUID.randomUUID();
-
-            ResultDTO resultDTO = ResultDTO.builder()
-                    .testId(testId)
-                    .build();
+            ResultDTO mockResult = mock(ResultDTO.class);
+            QuestionDTO mockQuestion = mock(QuestionDTO.class);
 
             TestProgressDTO testProgressDTO = TestProgressDTO.builder()
-                    .result(resultDTO)
+                    .result(mockResult)
+                    .question(mockQuestion)
                     .answers(new String[]{"answer"})
                     .build();
 
+            when(mockResult.getTestId()).thenReturn(testId);
             when(testDao.findById(testId)).thenReturn(null);
+
+            doNothing().when(validatorTestRunnerService).validateTestProgressDTO(testProgressDTO);
+            doCallRealMethod().when(validatorTestRunnerService).validateTest(null);
 
             // ACT & ASSERT
             ValidationException exception = assertThrows(ValidationException.class,
                     () -> testRunnerService.nextQuestion(testProgressDTO));
 
-            assertEquals("Test with id " + testId + " not found", exception.getMessage());
+            assertEquals("Test not found", exception.getMessage());
             verify(testDao).findById(testId);
             verifyNoInteractions(resultService);
         }

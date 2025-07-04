@@ -81,12 +81,10 @@ public class ResultService {
     }
 
     public ResultDTO findById(String id) {
-        if(id == null || id.isEmpty()){
-            throw new ValidationException("Result id is null or empty");
-        }
-        return resultDao.findById(UUID.fromString(id))
+        UUID uuid = convertToUUID(id);
+        return resultDao.findById(uuid)
                 .map(Result::toDTO)
-                .orElseThrow(() -> new ValidationException("Result with id=" + id + " not found"));
+                .orElseThrow(() -> new ValidationException("Result not found"));
     }
 
     public List<TestStatsDTO> getStats(List<TestDTO> allTestsDTO) {
@@ -133,5 +131,16 @@ public class ResultService {
 
     public Integer countAttempts() {
         return resultDao.getCount();
+    }
+
+    private UUID convertToUUID(String id) {
+        if(id == null || id.isEmpty()){
+            throw new ValidationException("Invalid UUID format");
+            }
+        try {
+            return UUID.fromString(id);
+        } catch (IllegalArgumentException e) {
+            throw new ValidationException("Invalid UUID format");
+        }
     }
 }

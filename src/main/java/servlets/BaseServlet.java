@@ -195,7 +195,7 @@ public class BaseServlet extends HttpServlet {
      * Extracts a list of answers from the HTTP request
      */
     protected List<AnswerDTO> extractAnswersFromRequest(HttpServletRequest request) {
-        List<dto.AnswerDTO> answerDTOList = new ArrayList<>();
+        List<AnswerDTO> answerDTOList = new ArrayList<>();
         
         for (int i = 1; i <= 10; i++) {
             String answerText = getParam(request, "answer" + i);
@@ -211,6 +211,7 @@ public class BaseServlet extends HttpServlet {
                 answerDTOList.add(answer);
             }
         }
+        testService.ValidateCorrectAnswers(answerDTOList);
         
         return answerDTOList;
     }
@@ -218,8 +219,4 @@ public class BaseServlet extends HttpServlet {
     /**
      * Checks if there is at least one correct answer in the list
      */
-    protected boolean hasCorrectAnswer(List<AnswerDTO> answerDTOList) {
-        return answerDTOList.stream().anyMatch(AnswerDTO::isCorrect);
-    }
-
 }

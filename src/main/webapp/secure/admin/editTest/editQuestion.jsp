@@ -45,13 +45,13 @@
         <c:if test="${not empty currentQuestion}">
             <div class="current-data">
                 <h3>Current Question Data:</h3>
-                <p><strong>Question <c:out value="${currentQuestion.question_number}"/>:</strong> <c:out value="${currentQuestion.question_text}"/></p>
+                <p><strong>Question <c:out value="${currentQuestion.questionNumber}"/>:</strong> <c:out value="${currentQuestion.questionText}"/></p>
                 <p><strong>Answers:</strong></p>
                 <ul>
                     <c:forEach var="answer" items="${currentQuestion.answers}" varStatus="status">
                         <li>
-                            <c:out value="${answer.answer_text}"/>
-                            <c:if test="${answer.correct}"> ✓</c:if>
+                            <c:out value="${answer.answerText}"/>
+                            <c:if test="${answer.isCorrect}"> ✓</c:if>
                         </li>
                     </c:forEach>
                 </ul>
@@ -64,7 +64,7 @@
                 <div class="form__group">
                     <label for="question" class="form__label">New Question Text</label>
                     <input id="question" name="question" type="text" required class="form__control" 
-                           value="<c:out value="${currentQuestion.question_text}"/>">
+                           value="<c:out value="${currentQuestion.questionText}"/>">
                 </div>
 
                 <div class="alert alert--info">
@@ -92,7 +92,7 @@
                         </c:choose>
                         <label class="checkbox-label">
                             <c:choose>
-                                <c:when test="${not empty currentAnswer and currentAnswer.correct}">
+                                <c:when test="${not empty currentAnswer and currentAnswer.isCorrect}">
                                     <input type="checkbox" name="correct${i}" value="true" checked>
                                 </c:when>
                                 <c:otherwise>

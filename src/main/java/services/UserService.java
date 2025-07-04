@@ -1,16 +1,14 @@
 package services;
 
-import validator.ValidatorUtil;
+import validators.ValidatorUserService;
 import dao.UserDao;
 import dto.UserDTO;
 import entity.User;
 import exceptions.AuthenticationException;
 import exceptions.DataAccessException;
 import exceptions.RegistrationException;
-import exceptions.ValidationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UserService {
     private static final String USERNAME_ALREADY_EXISTS = "User with username '%s' already exists.";
     private static final String DEFAULT_ROLE = "USER";
-    private static final int MIN_PASSWORD_LENGTH = 8;
 
     private static final int MAX_FAILED_ATTEMPTS = 5;
     private static final long BLOCK_TIME_MILLIS = 10 * 60 * 1000; // 10 minutes
@@ -28,24 +25,23 @@ public class UserService {
 
     private final UserDao userDao;
     private final BCryptPasswordEncoder encoder;
+    private final ValidatorUserService validatorUserService;
 
-    public UserService(UserDao userDao, BCryptPasswordEncoder encoder) {
+    public UserService(UserDao userDao, BCryptPasswordEncoder encoder, ValidatorUserService validatorUserService) {
         this.userDao = userDao;
         this.encoder = encoder;
+        this.validatorUserService = validatorUserService;
     }
 
     /**
      * Registers a new user in the system.
      */
     public UserDTO registerUser(UserDTO userDTO, String password) throws DataAccessException {
-        ValidatorUtil.validate(userDTO);
-
-        if (password == null || password.length() < MIN_PASSWORD_LENGTH || password.isBlank()) {
-            throw new ValidationException(List.of("Password must be at least " + MIN_PASSWORD_LENGTH + " characters long and not blank."));
-        }
+        validatorUserService.validateUserDto(userDTO);
+        validatorUserService.validatePassword(password);
         String username = userDTO.getUsername();
-        Optional<User> existingUser = userDao.findByUsername(username);
-        if (existingUser.isPresent()) {
+        Optional<User> userExist = userDao.findByUsername(username);
+        if (userExist.isPresent()) {
             throw new RegistrationException(String.format(USERNAME_ALREADY_EXISTS, username));
         }
 
@@ -57,7 +53,7 @@ public class UserService {
                 .build();
         try {
             userDao.add(user);
-        }catch (DataAccessException e){
+        } catch (DataAccessException e) {
             throw new RegistrationException("Failed to register user", e);
         }
         return user.toDTO();
@@ -67,11 +63,8 @@ public class UserService {
      * Authenticates a user by username and password.
      */
     public UserDTO login(String username, String password) throws DataAccessException {
-        if(username == null || username.isBlank() || password == null || password.isBlank()) {
-            throw new ValidationException("Username or password must not be blank");
-        }
-
-        checkBlocked(username);
+       validatorUserService.validateUsernameAndPassword(username, password);
+       checkBlocked(username);
 
         try {
             UserDTO userDTO = userDao.findByUsername(username)

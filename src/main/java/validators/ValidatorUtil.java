@@ -1,4 +1,4 @@
-package validator;
+package validators;
 
 import exceptions.ValidationException;
 import jakarta.validation.ConstraintViolation;

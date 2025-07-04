@@ -19,7 +19,10 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import validator.ValidatorUtil;
+import validators.ValidatorTestRunnerService;
+import validators.ValidatorTestService;
+import validators.ValidatorUserService;
+import validators.ValidatorUtil;
 
 import java.io.File;
 
@@ -47,11 +50,14 @@ public class ContextListener implements ServletContextListener {
         ResultDaoImpl resultDaoImpl = new ResultDaoImpl(new JsonFileDaoImpl<>(Result.class, "results", new File(resultsPath), objectMapper));
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        ValidatorUserService validatorUserService = new ValidatorUserService();
+        ValidatorTestService validatorTestService = new ValidatorTestService();
+        ValidatorTestRunnerService validatorTestRunnerService = new ValidatorTestRunnerService();
 
-        UserService userService = new UserService(userDaoImpl, encoder);
+        UserService userService = new UserService(userDaoImpl, encoder,validatorUserService);
         ResultService resultService = new ResultService(resultDaoImpl);
-        TestService testService = new TestService(testDaoImpl);
-        TestRunnerService testRunnerService = new TestRunnerService(testDaoImpl, resultService);
+        TestService testService = new TestService(testDaoImpl,validatorTestService);
+        TestRunnerService testRunnerService = new TestRunnerService(testDaoImpl, resultService, validatorTestRunnerService);
 
         servletContext.setAttribute("userService", userService);
         servletContext.setAttribute("testService", testService);

@@ -27,10 +27,6 @@ public class AddQuestionToTestServlet extends BaseServlet {
         String questionText = (getParam(req, "question"));
 
             List<AnswerDTO> answerDTOList = extractAnswersFromRequest(req);
-            if (!hasCorrectAnswer(answerDTOList)) {
-                redirectWithError(req, resp, "Failed to add question to test " + testDTO.getTitle() + "! \n" + "At least one answer must be correct!", ServletPaths.ADD_QUESTION_JSP);
-                return;
-            }
 
             testDTO = testService.addQuestion(testDTO, QuestionDTO.builder()
                                                                   .id(UUID.randomUUID())

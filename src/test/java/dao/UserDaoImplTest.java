@@ -14,7 +14,7 @@ import static org.mockito.Mockito.*;
 
 @DisplayName("UserDaoImpl CRUD and cache Tests")
 class UserDaoImplTest {
-    private JsonFileDaoImpl<User> baseDao;
+    private JsonFileDao<User> baseDao;
     private UserDaoImpl userDaoImpl;
 
     @BeforeEach

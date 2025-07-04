@@ -1,5 +1,6 @@
 package dao.impl;
 
+import dao.JsonFileDao;
 import dao.ResultDao;
 import entity.Result;
 
@@ -11,20 +12,20 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import exceptions.DataAccessException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Data access object for managing test result entities.
  */
+@Slf4j
 public class ResultDaoImpl implements ResultDao {
-    private static final Logger logger = LoggerFactory.getLogger(ResultDaoImpl.class);
-    private final JsonFileDaoImpl<Result> baseDao;
+    private final JsonFileDao<Result> baseDao;
     private final Map<UUID, Result> resultMap;
     private final Map<UUID, List<Result>> resultsByUserIdMap;
     private final Map<UUID, List<Result>> resultsByTestIdMap;
 
-    public ResultDaoImpl(JsonFileDaoImpl<Result> baseDao) {
+    public ResultDaoImpl(JsonFileDao<Result> baseDao) {
         this.baseDao = baseDao;
         resultMap = new ConcurrentHashMap<>();
         resultsByUserIdMap = new ConcurrentHashMap<>();
@@ -39,15 +40,15 @@ public class ResultDaoImpl implements ResultDao {
             resultsByUserIdMap.computeIfAbsent(result.getUserId(), k -> new CopyOnWriteArrayList<>()).add(result);
             resultsByTestIdMap.computeIfAbsent(result.getTestId(), k -> new CopyOnWriteArrayList<>()).add(result);
         }
-        logger.info("Results cache refreshed");
+        log.info("Results cache refreshed");
     }
 
 
     /**
      * Saves a result and updates all caches.
      */
-    public void save(Result result) {
-        logger.debug("Saving new result for testId: {} and userId: {}", result.getTestId(), result.getUserId());
+    public void save(Result result) throws DataAccessException {
+        log.debug("Saving new result for testId: {} and userId: {}", result.getTestId(), result.getUserId());
         baseDao.add(result);
         resultMap.put(result.getId(), result);
         resultsByTestIdMap.computeIfAbsent(result.getTestId(), k -> new CopyOnWriteArrayList<>()).add(result);

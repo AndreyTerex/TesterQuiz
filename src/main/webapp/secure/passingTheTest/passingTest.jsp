@@ -45,8 +45,8 @@
 
     <div class="test-info">
       <h3>Test: <c:out value="${currentTest.title}" /></h3>
-      <p><strong>Question number:</strong> <c:out value="${currentQuestion.question_number}" /></p>
-      <p><strong>Question text:</strong> <c:out value="${currentQuestion.question_text}" /></p>
+      <p><strong>Question number:</strong> <c:out value="${currentQuestion.questionNumber}" /></p>
+      <p><strong>Question text:</strong> <c:out value="${currentQuestion.questionText}" /></p>
     </div>
 
     <form action="/secure/nextQuestion" method="post">
@@ -55,7 +55,7 @@
           <div class="answer-option">
             <label>
               <input type="checkbox" name="selectedAnswers" value="${answer.id}">
-              <c:out value="${answer.answer_text}" />
+              <c:out value="${answer.answerText}" />
             </label>
           </div>
         </c:forEach>

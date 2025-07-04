@@ -42,10 +42,10 @@
         <h4>Questions and Answers</h4>
         <c:forEach var="answer" items="${result.resultAnswers}" varStatus="qStatus">
             <div class="question-block">
-                <p><strong>Q${qStatus.index + 1}:</strong> <c:out value="${answer.question.question_text}" /></p>
+                <p><strong>Q${qStatus.index + 1}:</strong> <c:out value="${answer.question.questionText}" /></p>
                 <p><strong>Your answers:</strong>
                     <c:forEach var="ans" items="${answer.selectedAnswers}" varStatus="aStatus">
-                        <c:out value="${ans.answer_text}" />
+                        <c:out value="${ans.answerText}" />
                         <c:if test="${!aStatus.last}">, </c:if>
                     </c:forEach>
                 </p>

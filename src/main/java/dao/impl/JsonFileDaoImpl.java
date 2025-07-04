@@ -5,8 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dao.JsonFileDao;
 import exceptions.DataAccessException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,8 +14,8 @@ import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+@Slf4j
 public class JsonFileDaoImpl<T> implements JsonFileDao<T> {
-    private static final Logger logger = LoggerFactory.getLogger(JsonFileDaoImpl.class);
     private final ObjectMapper objectMapper;
     private final Class<T> type;
     private final String rootName;
@@ -45,7 +44,7 @@ public class JsonFileDaoImpl<T> implements JsonFileDao<T> {
                     root.putArray(rootName);
                     objectMapper.writeValue(file, root);
                 } catch (IOException e) {
-                    logger.error("Failed to create initial file: {}", file.getAbsolutePath(), e);
+                    log.error("Failed to create initial file: {}", file.getAbsolutePath(), e);
                     throw new DataAccessException("Failed to create file: " + file.getPath(), e);
                 }
             }
@@ -74,7 +73,7 @@ public class JsonFileDaoImpl<T> implements JsonFileDao<T> {
             cache = objectMapper.convertValue(arrNode, objectMapper.getTypeFactory().constructCollectionType(List.class, type));
             return new ArrayList<>(cache);
         } catch (IOException e) {
-            logger.error("Failed to read items from file: {}", file.getAbsolutePath(), e);
+            log.error("Failed to read items from file: {}", file.getAbsolutePath(), e);
             throw new DataAccessException("Failed to read from file: " + file.getPath(), e);
         } finally {
             lock.readLock().unlock();
@@ -84,7 +83,7 @@ public class JsonFileDaoImpl<T> implements JsonFileDao<T> {
     /**
      * Writes all objects to the storage.
      */
-    public void writeAll(List<T> list) {
+    public void writeAll(List<T> list)  {
         lock.writeLock().lock();
         try {
             ObjectNode root = objectMapper.createObjectNode();
@@ -92,7 +91,7 @@ public class JsonFileDaoImpl<T> implements JsonFileDao<T> {
             objectMapper.writeValue(file, root);
             cache = new ArrayList<>(list);
         } catch (IOException e) {
-            logger.error("Failed to write items to file: {}", file.getAbsolutePath(), e);
+            log.error("Failed to write items to file: {}", file.getAbsolutePath(), e);
             throw new DataAccessException("Failed to write to file: " + file.getPath(), e);
         } finally {
             lock.writeLock().unlock();
@@ -102,7 +101,7 @@ public class JsonFileDaoImpl<T> implements JsonFileDao<T> {
     /**
      * Adds a new object to the storage.
      */
-    public void add(T t) {
+    public void add(T t) throws DataAccessException {
         lock.writeLock().lock();
         try {
             List<T> list = findAll();
@@ -127,7 +126,7 @@ public class JsonFileDaoImpl<T> implements JsonFileDao<T> {
             File output = new File(directory, filename);
             objectMapper.writeValue(output, object);
         } catch (IOException e) {
-            logger.error("Failed to save to unique file: {}", filenamePrefix, e);
+            log.error("Failed to save to unique file: {}", filenamePrefix, e);
             throw new DataAccessException("Failed to save to unique file: " + filenamePrefix, e);
         } finally {
             lock.writeLock().unlock();
@@ -144,11 +143,11 @@ public class JsonFileDaoImpl<T> implements JsonFileDao<T> {
                 return;
             }
             if (!file.delete()) {
-                logger.error("Failed to delete file: {}", file.getAbsolutePath());
+                log.error("Failed to delete file: {}", file.getAbsolutePath());
                 throw new IOException("Failed to delete file: " + file.getAbsolutePath());
             }
         } catch (IOException e) {
-            logger.error("Error during file deletion: {}", file.getAbsolutePath(), e);
+            log.error("Error during file deletion: {}", file.getAbsolutePath(), e);
             throw new DataAccessException("Error during file deletion: " + file.getAbsolutePath(), e);
         } finally {
             lock.writeLock().unlock();

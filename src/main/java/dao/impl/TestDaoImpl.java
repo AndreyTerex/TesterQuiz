@@ -1,22 +1,22 @@
 package dao.impl;
 
+import dao.JsonFileDao;
 import dao.TestDao;
 import entity.Test;
 import exceptions.DataAccessException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 public class TestDaoImpl implements TestDao {
-    private static final Logger logger = LoggerFactory.getLogger(TestDaoImpl.class);
-    private final JsonFileDaoImpl<Test> baseDao;
+    private final JsonFileDao<Test> baseDao;
     private final String realPath;
     private final Map<UUID, Test> testsMap;
 
-    public TestDaoImpl(JsonFileDaoImpl<Test> baseDao, String realPath) {
+    public TestDaoImpl(JsonFileDao<Test> baseDao, String realPath) {
         this.baseDao = baseDao;
         this.realPath = realPath;
         testsMap = new ConcurrentHashMap<>();
@@ -28,17 +28,17 @@ public class TestDaoImpl implements TestDao {
         for (Test test : allTests) {
             testsMap.put(test.getId(), test);
         }
-        logger.info("Tests cache refreshed");
+        log.info("Tests cache refreshed");
     }
 
     /**
      * Saves or updates a test in the cache and base storage.
      */
     public void save(Test build) {
-        logger.debug("Saving test with id: {}", build.getId());
+        log.debug("Saving test with id: {}", build.getId());
         testsMap.put(build.getId(), build);
         baseDao.writeAll(new ArrayList<>(testsMap.values()));
-        logger.info("Test with id: {} saved successfully.", build.getId());
+        log.info("Test with id: {} saved successfully.", build.getId());
     }
 
     /**
@@ -49,7 +49,7 @@ public class TestDaoImpl implements TestDao {
 
         File directory = new File(realPath);
         baseDao.saveToUniqueFile(test, directory, String.valueOf(test.getId()));
-        logger.info("Test {} saved to unique file.", test.getId());
+        log.info("Test {} saved to unique file.", test.getId());
     }
 
     /**
@@ -65,7 +65,7 @@ public class TestDaoImpl implements TestDao {
     public void deleteById(UUID testId) {
         Test testToDelete = findById(testId);
         if (testToDelete == null) {
-            logger.warn("Attempted to delete a non-existent test with id: {}", testId);
+            log.warn("Attempted to delete a non-existent test with id: {}", testId);
             throw new DataAccessException("Test with id " + testId + " does not exist.");
         }
 
@@ -76,13 +76,13 @@ public class TestDaoImpl implements TestDao {
                     baseDao.deleteUniqueFile(uniqueFile);
                 }
             } catch (Exception e) {
-                logger.error("Failed to delete unique file for test {}. Aborting delete operation.", testId, e);
+                log.error("Failed to delete unique file for test {}. Aborting delete operation.", testId, e);
                 throw new DataAccessException("Failed to delete unique file for test " + testId, e);
             }
         }
         testsMap.remove(testId);
         baseDao.writeAll(new ArrayList<>(testsMap.values()));
-        logger.info("Test {} deleted successfully from the main list.", testId);
+        log.info("Test {} deleted successfully from the main list.", testId);
     }
 
     private File getUniqueFile(Test test) {

@@ -11,7 +11,7 @@ import static org.mockito.Mockito.*;
 
 @DisplayName("ResultDaoImpl CRUD and cache Tests")
 class ResultDaoImplTest {
-    private JsonFileDaoImpl<Result> baseDao;
+    private JsonFileDao<Result> baseDao;
     private ResultDaoImpl resultDaoImpl;
 
     @BeforeEach

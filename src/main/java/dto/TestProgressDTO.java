@@ -8,10 +8,10 @@ import lombok.Data;
 @Data
 @Builder
 public class TestProgressDTO {
-    private ResultDTO result;
-    private QuestionDTO question;
-    private String[] answers;
-    private boolean isTestFinished;
+    private final ResultDTO result;
+    private final QuestionDTO question;
+    private final String[] answers;
+    private final boolean isTestFinished;
 
 
 }

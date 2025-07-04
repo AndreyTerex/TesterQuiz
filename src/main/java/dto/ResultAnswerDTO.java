@@ -4,19 +4,17 @@ import entity.ResultAnswer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ResultAnswerDTO {
-    private QuestionDTO question;
-    private List<AnswerDTO> selectedAnswers;
+    private final QuestionDTO question;
+    private final List<AnswerDTO> selectedAnswers;
 
     public ResultAnswer toEntity() {
         return ResultAnswer.builder()

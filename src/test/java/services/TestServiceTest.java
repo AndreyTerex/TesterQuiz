@@ -1,3 +1,4 @@
+
 package services;
 
 import dao.TestDao;
@@ -11,7 +12,8 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import validator.ValidatorUtil;
+import validators.ValidatorTestService;
+import validators.ValidatorUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +32,9 @@ public class TestServiceTest {
     @Mock
     private TestDao testDao;
 
+    @Mock
+    private ValidatorTestService validatorTestService;
+
     private TestService testService;
 
     @BeforeAll
@@ -44,7 +49,7 @@ public class TestServiceTest {
 
     @BeforeEach
     void setUp() {
-        testService = new TestService(testDao);
+        testService = new TestService(testDao, validatorTestService);
     }
 
     @Nested
@@ -57,10 +62,12 @@ public class TestServiceTest {
             // ARRANGE
             TestDTO testDTO = emptyTest("New Test", "Any topic");
             when(testDao.existByTitle(testDTO.getTitle())).thenReturn(false);
+            doNothing().when(validatorTestService).validate(testDTO);
 
             // ACT & ASSERT
             assertDoesNotThrow(() -> testService.checkTestTitleAndValidate(testDTO));
             verify(testDao).existByTitle(testDTO.getTitle());
+            verify(validatorTestService).validate(testDTO);
         }
 
         @Test
@@ -69,10 +76,12 @@ public class TestServiceTest {
             // ARRANGE
             TestDTO testDTO = emptyTest("Existing Title", "Any topic");
             when(testDao.existByTitle(testDTO.getTitle())).thenReturn(true);
+            doNothing().when(validatorTestService).validate(testDTO);
 
             // ACT & ASSERT
             assertThrows(ValidationException.class, () -> testService.checkTestTitleAndValidate(testDTO));
             verify(testDao).existByTitle(testDTO.getTitle());
+            verify(validatorTestService).validate(testDTO);
         }
     }
 
@@ -86,9 +95,11 @@ public class TestServiceTest {
             // ARRANGE
             TestDTO testDTO = emptyTest("Any title", "Any topic");
             QuestionDTO questionDTO = questionWithAnswer(
-                "This is a question text that is long enough", 
+                "This is a question text that is long enough",
                 "Correct Answer"
             );
+            doNothing().when(validatorTestService).validate(any(TestDTO.class));
+            doNothing().when(validatorTestService).validate(any(QuestionDTO.class));
 
             // ACT
             TestDTO result = testService.addQuestion(testDTO, questionDTO);
@@ -97,6 +108,8 @@ public class TestServiceTest {
             assertEquals(1, result.getQuestions().size());
             assertEquals(questionDTO.getQuestionText(), result.getQuestions().get(0).getQuestionText());
             assertEquals(1, result.getQuestions().get(0).getQuestionNumber());
+            verify(validatorTestService).validate(any(TestDTO.class));
+            verify(validatorTestService).validate(any(QuestionDTO.class));
         }
     }
 
@@ -142,6 +155,7 @@ public class TestServiceTest {
             UUID testId = UUID.randomUUID();
             entity.Test testFromDao = testEntityFull(testId, "Found Test", "Found Topic", new ArrayList<>());
             when(testDao.findById(testId)).thenReturn(testFromDao);
+            doNothing().when(validatorTestService).validateTestId(testId);
 
             // ACT
             TestDTO resultDto = testService.findById(testId.toString());
@@ -159,6 +173,7 @@ public class TestServiceTest {
             // ARRANGE
             UUID testId = UUID.randomUUID();
             when(testDao.findById(testId)).thenReturn(null);
+            doNothing().when(validatorTestService).validateTestId(testId);
 
             // ACT & ASSERT
             assertThrows(ValidationException.class, () -> testService.findById(testId.toString()));
@@ -226,12 +241,14 @@ public class TestServiceTest {
             // ARRANGE
             UUID testId = UUID.randomUUID();
             UUID questionId = UUID.randomUUID();
-            
+
             entity.Test test = testEntityWithQuestion(testId, questionId);
             QuestionDTO updatedQuestionDTO = questionWithId(questionId, "New question text is long enough");
 
             when(testDao.findById(testId)).thenReturn(test);
             doNothing().when(testDao).saveUniqueTest(any(entity.Test.class));
+            doNothing().when(validatorTestService).validate(updatedQuestionDTO);
+            doNothing().when(validatorTestService).validateTestId(testId);
 
             // ACT
             TestDTO result = testService.updateQuestion(testId, updatedQuestionDTO);
@@ -242,6 +259,7 @@ public class TestServiceTest {
             assertEquals("Correct Answer", result.getQuestions().get(0).getAnswers().get(0).getAnswerText());
             verify(testDao).findById(testId);
             verify(testDao).saveUniqueTest(any(entity.Test.class));
+            verify(validatorTestService).validate(updatedQuestionDTO);
         }
 
         @Test
@@ -256,11 +274,14 @@ public class TestServiceTest {
                 UUID.randomUUID(), // another ID
                 "Some question text that is long enough"
             );
+            doNothing().when(validatorTestService).validate(updatedQuestionDTO);
+            doNothing().when(validatorTestService).validateTestId(testId);
 
             // ACT & ASSERT
             assertThrows(ValidationException.class, () -> testService.updateQuestion(testId, updatedQuestionDTO));
             verify(testDao).findById(testId);
             verify(testDao, never()).saveUniqueTest(any(entity.Test.class));
+            verify(validatorTestService).validate(updatedQuestionDTO);
         }
     }
 
@@ -273,10 +294,14 @@ public class TestServiceTest {
         void saveTest() {
             // ARRANGE
             TestDTO testDTO = validTestForSave();
+            doNothing().when(validatorTestService).validate(testDTO);
+            doNothing().when(validatorTestService).validateQuestions(testDTO.getQuestions());
             doNothing().when(testDao).saveUniqueTest(any(entity.Test.class));
 
             // ACT & ASSERT
             assertDoesNotThrow(() -> testService.saveTest(testDTO));
+            verify(validatorTestService).validate(testDTO);
+            verify(validatorTestService).validateQuestions(testDTO.getQuestions());
             verify(testDao).saveUniqueTest(any(entity.Test.class));
         }
 
@@ -285,9 +310,13 @@ public class TestServiceTest {
         void saveTestNoQuestions() {
             // ARRANGE
             TestDTO testDTO = testWithNoQuestions();
+            doNothing().when(validatorTestService).validate(testDTO);
+            doThrow(new ValidationException("Test must have at least one question.")).when(validatorTestService).validateQuestions(testDTO.getQuestions());
 
             // ACT & ASSERT
             assertThrows(ValidationException.class, () -> testService.saveTest(testDTO));
+            verify(validatorTestService).validate(testDTO);
+            verify(validatorTestService).validateQuestions(testDTO.getQuestions());
             verifyNoInteractions(testDao);
         }
 
@@ -296,9 +325,13 @@ public class TestServiceTest {
         void saveTestNoAnswers() {
             // ARRANGE
             TestDTO testDTO = testWithQuestionWithoutAnswers();
+            doNothing().when(validatorTestService).validate(testDTO);
+            doThrow(new ValidationException("Question must have answers.")).when(validatorTestService).validateQuestions(testDTO.getQuestions());
 
             // ACT & ASSERT
             assertThrows(ValidationException.class, () -> testService.saveTest(testDTO));
+            verify(validatorTestService).validate(testDTO);
+            verify(validatorTestService).validateQuestions(testDTO.getQuestions());
             verifyNoInteractions(testDao);
         }
 
@@ -307,21 +340,29 @@ public class TestServiceTest {
         void saveTestNoCorrectAnswer() {
             // ARRANGE
             TestDTO testDTO = testWithQuestionWithoutCorrectAnswers();
+            doNothing().when(validatorTestService).validate(testDTO);
+            doThrow(new ValidationException("Question must have at least one correct answer.")).when(validatorTestService).validateQuestions(testDTO.getQuestions());
 
             // ACT & ASSERT
             assertThrows(ValidationException.class, () -> testService.saveTest(testDTO));
+            verify(validatorTestService).validate(testDTO);
+            verify(validatorTestService).validateQuestions(testDTO.getQuestions());
             verifyNoInteractions(testDao);
         }
-        
+
         @Test
         @DisplayName("Should throw SaveException when DAO throws an exception")
         void saveTestDaoError() {
             // ARRANGE
             TestDTO testDTO = validTestForSave();
+            doNothing().when(validatorTestService).validate(testDTO);
+            doNothing().when(validatorTestService).validateQuestions(testDTO.getQuestions());
             doThrow(new DataAccessException("DB error")).when(testDao).saveUniqueTest(any(entity.Test.class));
 
             // ACT & ASSERT
             assertThrows(SaveException.class, () -> testService.saveTest(testDTO));
+            verify(validatorTestService).validate(testDTO);
+            verify(validatorTestService).validateQuestions(testDTO.getQuestions());
             verify(testDao).saveUniqueTest(any(entity.Test.class));
         }
     }
@@ -339,6 +380,7 @@ public class TestServiceTest {
             when(testDao.findById(testId)).thenReturn(test);
             when(testDao.existByTitle("New Title")).thenReturn(false);
             doNothing().when(testDao).saveUniqueTest(any(entity.Test.class));
+            doNothing().when(validatorTestService).validateTestId(testId);
 
             // ACT
             TestDTO result = testService.updateTestDetails(testId, "New Title", "New Topic");
@@ -362,6 +404,7 @@ public class TestServiceTest {
             entity.Test test = testEntityFull(testId, "Old Title", "Old Topic", new ArrayList<>());
             when(testDao.findById(testId)).thenReturn(test);
             when(testDao.existByTitle("Existing Title")).thenReturn(true);
+            doNothing().when(validatorTestService).validateTestId(testId);
 
             // ACT & ASSERT
             assertThrows(ValidationException.class, () -> testService.updateTestDetails(testId, "Existing Title", "New Topic"));

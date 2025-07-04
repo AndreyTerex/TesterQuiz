@@ -36,10 +36,6 @@ public class TestEditingManagerServlet extends BaseServlet {
         String QuestionText = req.getParameter("question");
         if (testDTO != null && questionId != null && QuestionText != null) {
             List<AnswerDTO> answerDTOList = extractAnswersFromRequest(req);
-            if (!hasCorrectAnswer(answerDTOList)) {
-                redirectWithError(req, resp, "Failed to edit question in test " + testDTO.getTitle() + "! \n" + "At least one answer must be correct!", ServletPaths.EDIT_QUESTION_JSP);
-                return;
-            }
 
             TestDTO updatedTest = testService.updateQuestion(testDTO.getId(), QuestionDTO.builder()
                     .id(UUID.fromString(questionId))
