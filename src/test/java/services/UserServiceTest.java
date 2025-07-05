@@ -11,7 +11,10 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import mappers.UserMapper;
+import org.mapstruct.factory.Mappers;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import services.interfaces.UserServiceInterface;
 import validators.ValidatorUserService;
 import validators.ValidatorUtil;
 
@@ -37,7 +40,9 @@ class UserServiceTest {
     @Mock
     private ValidatorUserService validatorUserService;
 
-    private UserService userService;
+    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+
+    private UserServiceInterface userService;
 
     @BeforeAll
     static void beforeAll() {
@@ -51,7 +56,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        userService = new UserService(userDao, encoder, validatorUserService);
+        userService = new UserService(userDao, encoder, validatorUserService, userMapper);
     }
 
     @Nested

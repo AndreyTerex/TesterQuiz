@@ -5,9 +5,11 @@ import dto.ResultDTO;
 import dto.TestDTO;
 import dto.TestStatsDTO;
 import entity.*;
+import mappers.ResultMapper;
 import exceptions.DataAccessException;
 import exceptions.SaveException;
 import exceptions.ValidationException;
+import services.interfaces.ResultServiceInterface;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,11 +18,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
-public class ResultService {
+public class ResultService implements ResultServiceInterface {
     private final ResultDao resultDao;
+    private final ResultMapper resultMapper;
 
-    public ResultService(ResultDao resultDao) {
+    public ResultService(ResultDao resultDao, ResultMapper resultMapper) {
         this.resultDao = resultDao;
+        this.resultMapper = resultMapper;
     }
 
     /**
@@ -42,7 +46,7 @@ public class ResultService {
      */
     public void saveResult(ResultDTO resultDTO) {
         try {
-            resultDao.save(resultDTO.toEntity());
+            resultDao.save(resultMapper.toEntity(resultDTO));
         } catch (DataAccessException e) {
             throw new SaveException("Failed to save result", e);
         }
@@ -74,7 +78,7 @@ public class ResultService {
 
     public List<ResultDTO> getAllResultsByUserId(UUID id) {
         return resultDao.getAllResultsByUserId(id).stream()
-                .map(Result::toDTO)
+                .map(resultMapper::toDTO)
                 .sorted(Comparator.comparing(ResultDTO::getDate).reversed())
                 .toList();
 
@@ -83,7 +87,7 @@ public class ResultService {
     public ResultDTO findById(String id) {
         UUID uuid = convertToUUID(id);
         return resultDao.findById(uuid)
-                .map(Result::toDTO)
+                .map(resultMapper::toDTO)
                 .orElseThrow(() -> new ValidationException("Result not found"));
     }
 
@@ -125,7 +129,7 @@ public class ResultService {
 
     private List<ResultDTO> findAllResultsByTestId(UUID testId) {
         return resultDao.getAllResultsByTestId(testId).stream()
-                .map(Result::toDTO)
+                .map(resultMapper::toDTO)
                 .toList();
     }
 

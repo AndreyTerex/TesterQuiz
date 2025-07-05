@@ -51,7 +51,7 @@
                     <c:forEach var="answer" items="${currentQuestion.answers}" varStatus="status">
                         <li>
                             <c:out value="${answer.answerText}"/>
-                            <c:if test="${answer.isCorrect}"> ✓</c:if>
+                            <c:if test="${answer.correct}"> ✓</c:if>
                         </li>
                     </c:forEach>
                 </ul>
@@ -83,7 +83,7 @@
                         <c:choose>
                             <c:when test="${not empty currentAnswer}">
                                 <input id="answer${i}" name="answer${i}" type="text" class="form__control" 
-                                       value="<c:out value="${currentAnswer.answer_text}"/>">
+                                       value="<c:out value="${currentAnswer.answerText}"/>">
                             </c:when>
                             <c:otherwise>
                                 <input id="answer${i}" name="answer${i}" type="text" class="form__control" 
@@ -92,7 +92,7 @@
                         </c:choose>
                         <label class="checkbox-label">
                             <c:choose>
-                                <c:when test="${not empty currentAnswer and currentAnswer.isCorrect}">
+                                <c:when test="${not empty currentAnswer and currentAnswer.correct}">
                                     <input type="checkbox" name="correct${i}" value="true" checked>
                                 </c:when>
                                 <c:otherwise>

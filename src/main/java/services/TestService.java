@@ -2,6 +2,10 @@ package services;
 
 import dto.AnswerDTO;
 import dto.QuestionDTO;
+import mappers.AnswerMapper;
+import mappers.QuestionMapper;
+import mappers.TestMapper;
+import services.interfaces.TestServiceInterface;
 import validators.ValidatorTestService;
 import dao.TestDao;
 import dto.TestDTO;
@@ -18,13 +22,19 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class TestService {
+public class TestService implements TestServiceInterface {
     private final TestDao testDao;
     private final ValidatorTestService validatorTestService;
+    private final TestMapper testMapper;
+    private final QuestionMapper questionMapper;
+    private final AnswerMapper answerMapper;
 
-    public TestService(TestDao testDao, ValidatorTestService validatorTestService) {
+    public TestService(TestDao testDao, ValidatorTestService validatorTestService, TestMapper testMapper, QuestionMapper questionMapper, AnswerMapper answerMapper) {
         this.testDao = testDao;
         this.validatorTestService = validatorTestService;
+        this.testMapper = testMapper;
+        this.questionMapper = questionMapper;
+        this.answerMapper = answerMapper;
     }
 
 
@@ -42,11 +52,11 @@ public class TestService {
     public TestDTO addQuestion(TestDTO testDTO, QuestionDTO questionDTO) {
         validatorTestService.validate(questionDTO);
         validatorTestService.validate(testDTO);
-        Test currentTest = testDTO.toEntity();
-        Question question = questionDTO.toEntity();
+        Test currentTest = testMapper.toEntity(testDTO);
+        Question question = questionMapper.toEntity(questionDTO);
         question.setQuestionNumber(currentTest.getQuestions().size() + 1);
         currentTest.getQuestions().add(question);
-        return currentTest.toDTO();
+        return testMapper.toDTO(currentTest);
     }
 
     /**
@@ -65,7 +75,7 @@ public class TestService {
      */
     public TestDTO findById(String id) {
         UUID uuid = convertToUUID(id);
-        return findTestByIdOrThrow(uuid).toDTO();
+        return testMapper.toDTO(findTestByIdOrThrow(uuid));
     }
 
     /**
@@ -77,7 +87,7 @@ public class TestService {
             return Collections.emptyList();
         }
         return tests.stream()
-                .map(Test::toDTO)
+                .map(testMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -94,13 +104,13 @@ public class TestService {
 
         Question question = questionToUpdate.orElseThrow(() -> new ValidationException("Question does not belong to this test."));
         question.setQuestionText(questionDTO.getQuestionText());
-        question.setAnswers(questionDTO.getAnswers().stream().map(AnswerDTO::toEntity).collect(Collectors.toList()));
+        question.setAnswers(questionDTO.getAnswers().stream().map(answerMapper::toEntity).collect(Collectors.toList()));
         try {
             testDao.saveUniqueTest(test);
         } catch (DataAccessException e) {
             throw new SaveException("Failed to save test.", e);
         }
-        return test.toDTO();
+        return testMapper.toDTO(test);
     }
 
     /**
@@ -109,7 +119,7 @@ public class TestService {
     public void saveTest(TestDTO testDTO) {
         validatorTestService.validate(testDTO);
         validatorTestService.validateQuestions(testDTO.getQuestions());
-        Test test = testDTO.toEntity();
+        Test test = testMapper.toEntity(testDTO);
 
         try {
             testDao.saveUniqueTest(test);
@@ -134,7 +144,7 @@ public class TestService {
         if (newTopic != null && !newTopic.isBlank()) {
             test.setTopic(newTopic);
         }
-        TestDTO dto = test.toDTO();
+        TestDTO dto = testMapper.toDTO(test);
         validatorTestService.validate(dto);
 
         try {
@@ -145,7 +155,7 @@ public class TestService {
         return dto;
     }
 
-    public void ValidateCorrectAnswers(List<AnswerDTO> answers) {
+    public void CheckCorrectAnswers(List<AnswerDTO> answers) {
         boolean questionHaveCorrectAnswer = answers.stream().anyMatch(AnswerDTO::isCorrect);
         if (!questionHaveCorrectAnswer) {
             throw new ValidationException("Question must have at least one correct answer.");

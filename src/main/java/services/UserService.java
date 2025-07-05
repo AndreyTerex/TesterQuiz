@@ -1,5 +1,7 @@
 package services;
 
+import mappers.UserMapper;
+import services.interfaces.UserServiceInterface;
 import validators.ValidatorUserService;
 import dao.UserDao;
 import dto.UserDTO;
@@ -14,7 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class UserService {
+public class UserService implements UserServiceInterface {
     private static final String USERNAME_ALREADY_EXISTS = "User with username '%s' already exists.";
     private static final String DEFAULT_ROLE = "USER";
 
@@ -26,11 +28,13 @@ public class UserService {
     private final UserDao userDao;
     private final BCryptPasswordEncoder encoder;
     private final ValidatorUserService validatorUserService;
+    private final UserMapper userMapper;
 
-    public UserService(UserDao userDao, BCryptPasswordEncoder encoder, ValidatorUserService validatorUserService) {
+    public UserService(UserDao userDao, BCryptPasswordEncoder encoder, ValidatorUserService validatorUserService, UserMapper userMapper) {
         this.userDao = userDao;
         this.encoder = encoder;
         this.validatorUserService = validatorUserService;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -56,7 +60,7 @@ public class UserService {
         } catch (DataAccessException e) {
             throw new RegistrationException("Failed to register user", e);
         }
-        return user.toDTO();
+        return userMapper.toDTO(user);
     }
 
     /**
@@ -69,7 +73,7 @@ public class UserService {
         try {
             UserDTO userDTO = userDao.findByUsername(username)
                     .filter(u -> encoder.matches(password, u.getPassword()))
-                    .map(User::toDTO)
+                    .map(userMapper::toDTO)
                     .orElseThrow(() -> new AuthenticationException("Invalid username or password"));
             resetAttempts(username);
             return userDTO;

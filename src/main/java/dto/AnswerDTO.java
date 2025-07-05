@@ -1,6 +1,5 @@
 package dto;
 
-import entity.Answer;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -19,13 +18,5 @@ public class AnswerDTO {
     @Size(min = 1, max = 255, message = "Answer text must be between 1 and 255 characters long.")
     @Pattern(regexp = "^[a-zA-Z0-9а-яА-Я ]+$", message = "Answer text can only contain letters, numbers, and spaces.")
     private final String answerText;
-    private final boolean isCorrect;
-
-    public Answer toEntity() {
-        return Answer.builder()
-                .id(id)
-                .answerText(answerText)
-                .isCorrect(isCorrect)
-                .build();
-    }
+    private final boolean correct;
 }

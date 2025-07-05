@@ -16,18 +16,7 @@ public class ValidatorTestRunnerService {
     }
 
     public void validateTestProgressDTO(TestProgressDTO testProgressDTO) {
-        if(testProgressDTO == null){
-            throw new ValidationException("Data not found");
-        }
-        if (testProgressDTO.getAnswers() == null) {
-            throw new ValidationException("Answers are not selected");
-        }
-        if (testProgressDTO.getResult() == null) {
-            throw new ValidationException("Result not found");
-        }
-        if (testProgressDTO.getQuestion() == null) {
-            throw new ValidationException("Question not found");
-        }
+        ValidatorUtil.validate(testProgressDTO);
     }
 
     public void validateTest(Test test) {

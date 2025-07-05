@@ -3,7 +3,12 @@ package services;
 import dao.TestDao;
 import dto.*;
 import entity.*;
+import mappers.QuestionMapper;
+import mappers.ResultMapper;
+import mappers.TestMapper;
 import exceptions.ValidationException;
+import services.interfaces.ResultServiceInterface;
+import services.interfaces.TestRunnerServiceInterface;
 import validators.ValidatorTestRunnerService;
 
 import java.time.LocalDateTime;
@@ -11,16 +16,22 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-public class TestRunnerService {
+public class TestRunnerService implements TestRunnerServiceInterface {
     private final TestDao testDao;
-    private final ResultService resultService;
+    private final ResultServiceInterface resultService;
     private final ValidatorTestRunnerService validatorTestRunnerService;
+    private final TestMapper testMapper;
+    private final QuestionMapper questionMapper;
+    private final ResultMapper resultMapper;
     private static final int TEST_DURATION_IN_MINUTES = 10;
 
-    public TestRunnerService(TestDao testDao, ResultService resultService, ValidatorTestRunnerService validatorTestRunnerService) {
+    public TestRunnerService(TestDao testDao, ResultServiceInterface resultService, ValidatorTestRunnerService validatorTestRunnerService, TestMapper testMapper, QuestionMapper questionMapper, ResultMapper resultMapper) {
         this.testDao = testDao;
         this.resultService = resultService;
         this.validatorTestRunnerService = validatorTestRunnerService;
+        this.testMapper = testMapper;
+        this.questionMapper = questionMapper;
+        this.resultMapper = resultMapper;
     }
 
     /**
@@ -40,9 +51,9 @@ public class TestRunnerService {
 
         Question currentQuestion = currentTest.getQuestions().stream().findFirst().orElseThrow(() -> new ValidationException("Test " + currentTest.getTitle() + " has no questions"));
             return TestSessionDTO.builder()
-                    .currentQuestion(currentQuestion.toDTO())
+                    .currentQuestion(questionMapper.toDTO(currentQuestion))
                     .roundedEndTime(roundedEndTime_formatted)
-                    .result(result.toDTO())
+                    .result(resultMapper.toDTO(result))
                     .testTimeOut(false)
                     .build();
     }
@@ -73,7 +84,7 @@ public class TestRunnerService {
         ResultAnswerDTO resultAnswer = getSelectedAnswersAndBuildResultAnswer(questionDTO, answers);
         resultDTO.getResultAnswers().add(resultAnswer);
 
-        Optional<QuestionDTO> nextQuestionOptional = getNextQuestion(test.toDTO(), questionDTO);
+        Optional<QuestionDTO> nextQuestionOptional = getNextQuestion(testMapper.toDTO(test), questionDTO);
 
         return getTestProgressDTO(nextQuestionOptional.orElse(null), testProgressDTO);
     }
@@ -98,7 +109,7 @@ public class TestRunnerService {
                     .isTestFinished(false)
                     .build();
         } else {
-            ResultDTO finalResult = resultService.calculateScoreResult(testProgressDTO.getResult().toEntity()).toDTO();
+            ResultDTO finalResult = resultMapper.toDTO(resultService.calculateScoreResult(resultMapper.toEntity(testProgressDTO.getResult())));
             return TestProgressDTO.builder()
                     .result(finalResult)
                     .isTestFinished(true)

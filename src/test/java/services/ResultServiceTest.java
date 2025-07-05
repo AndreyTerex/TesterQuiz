@@ -17,8 +17,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import mappers.ResultMapper;
+import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import services.interfaces.ResultServiceInterface;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,11 +41,13 @@ public class ResultServiceTest {
     @Mock
     private ResultDao resultDao;
 
-    private ResultService resultService;
+    private ResultMapper resultMapper = Mappers.getMapper(ResultMapper.class);
+
+    private ResultServiceInterface resultService;
 
     @BeforeEach
     void setUp() {
-        resultService = new ResultService(resultDao);
+        resultService = new ResultService(resultDao, resultMapper);
     }
 
     @Nested
@@ -132,7 +137,7 @@ public class ResultServiceTest {
             correctAnswer = Answer.builder()
                     .id(UUID.randomUUID())
                     .answerText(correctAnswer.getAnswerText())
-                    .isCorrect(true)
+                    .correct(true)
                     .build();
             Question question = Question.builder()
                     .id(UUID.randomUUID())
@@ -159,12 +164,12 @@ public class ResultServiceTest {
             correctAnswer = Answer.builder()
                     .id(UUID.randomUUID())
                     .answerText(correctAnswer.getAnswerText())
-                    .isCorrect(true)
+                    .correct(true)
                     .build();
             Answer incorrectAnswer = Answer.builder()
                     .id(UUID.randomUUID())
                     .answerText("")
-                    .isCorrect(false)
+                    .correct(false)
                     .build();
             Question question = Question.builder()
                     .id(UUID.randomUUID())
@@ -196,6 +201,44 @@ public class ResultServiceTest {
 
             // ASSERT
             assertEquals(0, scoredResult.getScore());
+        }
+
+        @Test
+        @DisplayName("Should calculate score correctly for mixed correct and incorrect answers")
+        void calculateScoreMixedAnswers() {
+            // ARRANGE
+            Answer correctAnswer = correctAnswerEntity("Correct");
+            correctAnswer = Answer.builder()
+                    .id(UUID.randomUUID())
+                    .answerText(correctAnswer.getAnswerText())
+                    .correct(true)
+                    .build();
+            Answer incorrectAnswer = Answer.builder()
+                    .id(UUID.randomUUID())
+                    .answerText("Incorrect")
+                    .correct(false)
+                    .build();
+            Question question1 = Question.builder()
+                    .id(UUID.randomUUID())
+                    .answers(List.of(correctAnswer, incorrectAnswer))
+                    .build();
+            Question question2 = Question.builder()
+                    .id(UUID.randomUUID())
+                    .answers(List.of(correctAnswer, incorrectAnswer))
+                    .build();
+
+            Result result = Result.builder()
+                    .resultAnswers(new ArrayList<>())
+                    .build();
+
+            result.getResultAnswers().add(new ResultAnswer(question1, List.of(correctAnswer)));
+            result.getResultAnswers().add(new ResultAnswer(question2, List.of(incorrectAnswer)));
+
+            // ACT
+            Result scoredResult = resultService.calculateScoreResult(result);
+
+            // ASSERT
+            assertEquals(1, scoredResult.getScore());
         }
     }
 

@@ -15,7 +15,7 @@ public class TestDataBuilders {
     public static AnswerDTO correctAnswer(String text) {
         return AnswerDTO.builder()
                 .answerText(text)
-                .isCorrect(true)
+                .correct(true)
                 .build();
     }
 
@@ -23,7 +23,7 @@ public class TestDataBuilders {
         return AnswerDTO.builder()
                 .id(id)
                 .answerText(text)
-                .isCorrect(true)
+                .correct(true)
                 .build();
     }
 
@@ -39,7 +39,7 @@ public class TestDataBuilders {
     public static AnswerDTO incorrectAnswer(String text) {
         return AnswerDTO.builder()
                 .answerText(text)
-                .isCorrect(false)
+                .correct(false)
                 .build();
     }
 
@@ -106,7 +106,7 @@ public class TestDataBuilders {
     public static Answer correctAnswerEntity(String text) {
         return Answer.builder()
                 .answerText(text)
-                .isCorrect(true)
+                .correct(true)
                 .build();
     }
 
@@ -114,7 +114,7 @@ public class TestDataBuilders {
         return Answer.builder()
                 .id(id)
                 .answerText(text)
-                .isCorrect(isCorrect)
+                .correct(isCorrect)
                 .build();
     }
 

@@ -1,6 +1,5 @@
 package dto;
 
-import entity.Result;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +8,6 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -30,18 +27,4 @@ public class ResultDTO {
     @PastOrPresent(message = "Date cannot be in the future.")
     private final LocalDateTime date;
     private final List<ResultAnswerDTO> resultAnswers;
-
-    public Result toEntity() {
-        return Result.builder()
-                .id(id)
-                .userId(userId)
-                .testId(testId)
-                .score(score)
-                .date(date)
-                .testTitle(testTitle)
-                .resultAnswers(resultAnswers.stream()
-                        .map(ResultAnswerDTO::toEntity)
-                        .collect(Collectors.toCollection(ArrayList::new)))
-                .build();
-    }
 }

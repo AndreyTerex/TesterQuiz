@@ -1,9 +1,15 @@
 package listener;
 
 import dao.impl.UserDaoImpl;
+import services.interfaces.ResultServiceInterface;
 import services.ResultService;
+import services.interfaces.TestRunnerServiceInterface;
 import services.TestRunnerService;
+import services.interfaces.TestServiceInterface;
 import services.TestService;
+import services.interfaces.UserServiceInterface;
+import mappers.*;
+import org.mapstruct.factory.Mappers;
 import services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -54,10 +60,16 @@ public class ContextListener implements ServletContextListener {
         ValidatorTestService validatorTestService = new ValidatorTestService();
         ValidatorTestRunnerService validatorTestRunnerService = new ValidatorTestRunnerService();
 
-        UserService userService = new UserService(userDaoImpl, encoder,validatorUserService);
-        ResultService resultService = new ResultService(resultDaoImpl);
-        TestService testService = new TestService(testDaoImpl,validatorTestService);
-        TestRunnerService testRunnerService = new TestRunnerService(testDaoImpl, resultService, validatorTestRunnerService);
+        AnswerMapper answerMapper = Mappers.getMapper(AnswerMapper.class);
+        QuestionMapper questionMapper = Mappers.getMapper(QuestionMapper.class);
+        ResultMapper resultMapper = Mappers.getMapper(ResultMapper.class);
+        TestMapper testMapper = Mappers.getMapper(TestMapper.class);
+        UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+
+        UserServiceInterface userService = new UserService(userDaoImpl, encoder, validatorUserService, userMapper);
+        ResultServiceInterface resultService = new ResultService(resultDaoImpl, resultMapper);
+        TestServiceInterface testService = new TestService(testDaoImpl, validatorTestService, testMapper, questionMapper, answerMapper);
+        TestRunnerServiceInterface testRunnerService = new TestRunnerService(testDaoImpl, resultService, validatorTestRunnerService, testMapper, questionMapper, resultMapper);
 
         servletContext.setAttribute("userService", userService);
         servletContext.setAttribute("testService", testService);

@@ -1,6 +1,5 @@
 package dto;
 
-import entity.Test;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -10,8 +9,6 @@ import lombok.Data;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -28,17 +25,4 @@ public class TestDTO {
     private final UUID id;
     private final UUID creatorId;
     private final List<QuestionDTO> questions;
-
-
-    public Test toEntity() {
-        return Test.builder()
-                .title(title)
-                .topic(topic)
-                .id(id)
-                .creatorId(creatorId)
-                .questions(questions.stream()
-                        .map(QuestionDTO::toEntity)
-                        .collect(Collectors.toCollection(ArrayList::new)))
-                .build();
-    }
 }

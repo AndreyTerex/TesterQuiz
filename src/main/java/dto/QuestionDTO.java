@@ -1,6 +1,5 @@
 package dto;
 
-import entity.Question;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -9,8 +8,6 @@ import lombok.Data;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -26,15 +23,4 @@ public class QuestionDTO {
     @Valid
     @NotEmpty(message = "answers must not be empty")
     private final List<AnswerDTO> answers;
-
-    public Question toEntity() {
-        return Question.builder()
-                .id(id)
-                .questionNumber(questionNumber)
-                .questionText(questionText)
-                .answers(answers.stream()
-                        .map(AnswerDTO::toEntity)
-                        .collect(Collectors.toCollection(ArrayList::new)))
-                .build();
-    }
 }

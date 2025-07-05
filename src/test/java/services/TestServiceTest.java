@@ -10,8 +10,13 @@ import exceptions.TestDeletionFailedException;
 import exceptions.ValidationException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import mappers.AnswerMapper;
+import mappers.QuestionMapper;
+import mappers.TestMapper;
+import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import services.interfaces.TestServiceInterface;
 import validators.ValidatorTestService;
 import validators.ValidatorUtil;
 
@@ -35,7 +40,11 @@ public class TestServiceTest {
     @Mock
     private ValidatorTestService validatorTestService;
 
-    private TestService testService;
+    private TestMapper testMapper = Mappers.getMapper(TestMapper.class);
+    private QuestionMapper questionMapper = Mappers.getMapper(QuestionMapper.class);
+    private AnswerMapper answerMapper = Mappers.getMapper(AnswerMapper.class);
+
+    private TestServiceInterface testService;
 
     @BeforeAll
     static void beforeAll() {
@@ -49,7 +58,7 @@ public class TestServiceTest {
 
     @BeforeEach
     void setUp() {
-        testService = new TestService(testDao, validatorTestService);
+        testService = new TestService(testDao, validatorTestService, testMapper, questionMapper, answerMapper);
     }
 
     @Nested

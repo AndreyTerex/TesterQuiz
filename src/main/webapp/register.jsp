@@ -28,7 +28,7 @@
       </div>
       <div class="form__group">
           <label for="password" class="form__label">Password</label>
-          <input id="password" name="password" type="password" required minlength="6" class="form__control">
+          <input id="password" name="password" type="password" required minlength="8" class="form__control">
       </div>
         <button type="submit" class="btn btn--primary btn--full">Create Account</button>
     </form>

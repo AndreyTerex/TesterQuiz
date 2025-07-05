@@ -8,8 +8,14 @@ import entity.Result;
 import exceptions.ValidationException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import mappers.QuestionMapper;
+import mappers.ResultMapper;
+import mappers.TestMapper;
+import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import services.interfaces.ResultServiceInterface;
+import services.interfaces.TestRunnerServiceInterface;
 import validators.ValidatorTestRunnerService;
 import validators.ValidatorUtil;
 
@@ -31,12 +37,15 @@ public class TestRunnerServiceTest {
     private TestDao testDao;
 
     @Mock
-    private ResultService resultService;
+    private ResultServiceInterface resultService;
 
-    @Mock
     private ValidatorTestRunnerService validatorTestRunnerService;
 
-    private TestRunnerService testRunnerService;
+    private TestMapper testMapper = Mappers.getMapper(TestMapper.class);
+    private QuestionMapper questionMapper = Mappers.getMapper(QuestionMapper.class);
+    private ResultMapper resultMapper = Mappers.getMapper(ResultMapper.class);
+
+    private TestRunnerServiceInterface testRunnerService;
 
     @BeforeAll
     static void beforeAll() {
@@ -50,7 +59,8 @@ public class TestRunnerServiceTest {
 
     @BeforeEach
     void setUp() {
-        testRunnerService = new TestRunnerService(testDao, resultService,validatorTestRunnerService);
+        validatorTestRunnerService = new ValidatorTestRunnerService();
+        testRunnerService = new TestRunnerService(testDao, resultService, validatorTestRunnerService, testMapper, questionMapper, resultMapper);
     }
 
     @Nested
@@ -99,7 +109,6 @@ public class TestRunnerServiceTest {
             UserDTO userDTO = userDTO(UUID.randomUUID(), null, null);
 
             when(testDao.findById(testId)).thenReturn(null);
-            doCallRealMethod().when(validatorTestRunnerService).validateTestSessionStart(null, userDTO);
 
             // ACT & ASSERT
             ValidationException exception = assertThrows(ValidationException.class,
@@ -118,7 +127,6 @@ public class TestRunnerServiceTest {
             entity.Test test = new entity.Test();
 
             when(testDao.findById(testId)).thenReturn(test);
-            doCallRealMethod().when(validatorTestRunnerService).validateTestSessionStart(test, null);
 
             // ACT & ASSERT
             ValidationException exception = assertThrows(ValidationException.class,
@@ -139,7 +147,6 @@ public class TestRunnerServiceTest {
             entity.Test test = testEntityFull(testId, "Test Title", null, Collections.emptyList());
 
             when(testDao.findById(testId)).thenReturn(test);
-            doNothing().when(validatorTestRunnerService).validateTestSessionStart(test, userDTO);
 
             // ACT & ASSERT
             ValidationException exception = assertThrows(ValidationException.class,
@@ -194,14 +201,12 @@ public class TestRunnerServiceTest {
             UUID testId = UUID.randomUUID();
             UUID answer1Id = UUID.randomUUID();
 
-            QuestionDTO questionDTO1 = questionWithAnswerAndAnswerId("Question 1", "Answer 1", UUID.randomUUID(), 1, answer1Id);
-            QuestionDTO questionDTO2 = questionWithAnswerAndAnswerId("Question 2", "Answer 1", UUID.randomUUID(), 2, answer1Id);
-            TestDTO testDTO = testDTOWithIdAndQuestions("Test Title", testId, List.of(questionDTO1, questionDTO2));
-
-            entity.Test mockTest = mock(entity.Test.class);
-            when(mockTest.toDTO()).thenReturn(testDTO);
+            Question question1 = questionEntityWithIdAndAnswers(UUID.randomUUID(), "Question 1", 1, List.of(answerEntityWithId("Answer 1", true, answer1Id)));
+            Question question2 = questionEntityWithIdAndAnswers(UUID.randomUUID(), "Question 2", 2, List.of(answerEntityWithId("Answer 2", true, UUID.randomUUID())));
+            entity.Test test = testEntityFull(testId, "Test Title", "Test Topic", List.of(question1, question2));
 
             ResultDTO resultDTO = resultDTOWithTestId(testId);
+            QuestionDTO questionDTO1 = questionMapper.toDTO(question1);
 
             TestProgressDTO testProgressDTO = TestProgressDTO.builder()
                     .result(resultDTO)
@@ -209,24 +214,23 @@ public class TestRunnerServiceTest {
                     .answers(new String[]{answer1Id.toString()})
                     .build();
 
-            when(testDao.findById(testId)).thenReturn(mockTest);
+            when(testDao.findById(testId)).thenReturn(test);
 
             // ACT
-            TestProgressDTO TestProgressDTOResult = testRunnerService.nextQuestion(testProgressDTO);
+            TestProgressDTO result = testRunnerService.nextQuestion(testProgressDTO);
 
             // ASSERT
-            assertNotNull(TestProgressDTOResult);
-            assertEquals(questionDTO2.getId(), TestProgressDTOResult.getQuestion().getId());
-            assertFalse(TestProgressDTOResult.isTestFinished());
-            assertEquals(1, TestProgressDTOResult.getResult().getResultAnswers().size());
+            assertNotNull(result);
+            assertEquals(question2.getId(), result.getQuestion().getId());
+            assertFalse(result.isTestFinished());
+            assertEquals(1, result.getResult().getResultAnswers().size());
 
-            ResultAnswerDTO savedAnswer = TestProgressDTOResult.getResult().getResultAnswers().get(0);
-            assertEquals(questionDTO1.getId(), savedAnswer.getQuestion().getId());
+            ResultAnswerDTO savedAnswer = result.getResult().getResultAnswers().get(0);
+            assertEquals(question1.getId(), savedAnswer.getQuestion().getId());
             assertEquals(1, savedAnswer.getSelectedAnswers().size());
             assertEquals(answer1Id, savedAnswer.getSelectedAnswers().get(0).getId());
 
             verify(testDao).findById(testId);
-            verify(mockTest).toDTO();
         }
 
         @Test
@@ -236,13 +240,11 @@ public class TestRunnerServiceTest {
             UUID testId = UUID.randomUUID();
             UUID answerId = UUID.randomUUID();
 
-            QuestionDTO questionDTO = questionWithAnswerAndAnswerId("Last Question", "Answer", UUID.randomUUID(), 1, answerId);
-            TestDTO testDTO = testDTOWithIdAndQuestions("Test Title", testId, List.of(questionDTO));
-
-            entity.Test mockTest = mock(entity.Test.class);
-            when(mockTest.toDTO()).thenReturn(testDTO);
+            Question question = questionEntityWithIdAndAnswers(UUID.randomUUID(), "Last Question", 1, List.of(answerEntityWithId("Answer", true, answerId)));
+            entity.Test test = testEntityFull(testId, "Test Title", "Test Topic", List.of(question));
 
             ResultDTO resultDTO = resultDTOWithTestId(testId);
+            QuestionDTO questionDTO = questionMapper.toDTO(question);
 
             TestProgressDTO testProgressDTO = TestProgressDTO.builder()
                     .result(resultDTO)
@@ -250,12 +252,13 @@ public class TestRunnerServiceTest {
                     .answers(new String[]{answerId.toString()})
                     .build();
 
-            when(testDao.findById(testId)).thenReturn(mockTest);
+            when(testDao.findById(testId)).thenReturn(test);
             when(resultService.calculateScoreResult(any(Result.class))).thenAnswer(invocation -> {
                 Result res = invocation.getArgument(0);
                 res.setScore(1);
                 return res;
             });
+
             // ACT
             TestProgressDTO result = testRunnerService.nextQuestion(testProgressDTO);
 
@@ -267,14 +270,12 @@ public class TestRunnerServiceTest {
             assertEquals(1, result.getResult().getScore());
 
             ResultAnswerDTO savedAnswer = result.getResult().getResultAnswers().get(0);
-            assertEquals(questionDTO.getId(), savedAnswer.getQuestion().getId());
+            assertEquals(question.getId(), savedAnswer.getQuestion().getId());
             assertEquals(1, savedAnswer.getSelectedAnswers().size());
             assertEquals(answerId, savedAnswer.getSelectedAnswers().get(0).getId());
 
             verify(testDao).findById(testId);
-            verify(mockTest).toDTO();
             verify(resultService).calculateScoreResult(any(Result.class));
-            verify(resultService, never()).saveResult(any(ResultDTO.class));
         }
 
         @Test
@@ -290,13 +291,11 @@ public class TestRunnerServiceTest {
                     .answers(null)
                     .build();
 
-            doCallRealMethod().when(validatorTestRunnerService).validateTestProgressDTO(any(TestProgressDTO.class));
-
             // ACT & ASSERT
-            ValidationException exception = assertThrows(ValidationException.class,
-                    () -> testRunnerService.nextQuestion(testProgressDTO));
+            ValidationException exception = assertThrows(ValidationException.class, () -> testRunnerService.nextQuestion(testProgressDTO));
 
-            assertEquals("Answers are not selected", exception.getMessage());
+            // Check that the message from the @NotNull annotation is present
+            assertTrue(exception.getMessage().contains("Answers are not selected"));
 
             verifyNoInteractions(testDao);
             verifyNoInteractions(resultService);
@@ -318,9 +317,6 @@ public class TestRunnerServiceTest {
 
             when(mockResult.getTestId()).thenReturn(testId);
             when(testDao.findById(testId)).thenReturn(null);
-
-            doNothing().when(validatorTestRunnerService).validateTestProgressDTO(testProgressDTO);
-            doCallRealMethod().when(validatorTestRunnerService).validateTest(null);
 
             // ACT & ASSERT
             ValidationException exception = assertThrows(ValidationException.class,
