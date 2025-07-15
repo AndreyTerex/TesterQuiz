@@ -1,36 +1,31 @@
 package listener;
 
-import dao.impl.UserDaoImpl;
-import services.interfaces.ResultServiceInterface;
-import services.ResultService;
-import services.interfaces.TestRunnerServiceInterface;
-import services.TestRunnerService;
-import services.interfaces.TestServiceInterface;
-import services.TestService;
-import services.interfaces.UserServiceInterface;
+import dao.impl.ResultDAOImpl;
+import dao.impl.TestDAOImpl;
+import dao.impl.UserDAOImpl;
+import services.ResultServiceImpl;
+import services.TestRunnerServiceImpl;
+import services.TestServiceImpl;
+import services.UserServiceImpl;
+import services.interfaces.ResultService;
+import services.interfaces.TestRunnerService;
+import services.interfaces.TestService;
+import services.interfaces.UserService;
 import mappers.*;
 import org.mapstruct.factory.Mappers;
-import services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import dao.impl.JsonFileDaoImpl;
-import dao.impl.ResultDaoImpl;
-import dao.impl.TestDaoImpl;
-import entity.Result;
-import entity.Test;
-import entity.User;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import util.HibernateUtil;
 import validators.ValidatorTestRunnerService;
 import validators.ValidatorTestService;
 import validators.ValidatorUserService;
-import validators.ValidatorUtil;
-
-import java.io.File;
+import util.ValidatorUtil;
 
 
 @WebListener
@@ -38,7 +33,7 @@ public class ContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-
+        HibernateUtil.init();
         ValidatorUtil.init();
 
         ServletContext servletContext = sce.getServletContext();
@@ -47,13 +42,6 @@ public class ContextListener implements ServletContextListener {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
-        String usersPath = servletContext.getRealPath("/WEB-INF/data/users/users.json");
-        String testsPath = servletContext.getRealPath("/WEB-INF/data/tests/tests.json");
-        String resultsPath = servletContext.getRealPath("/WEB-INF/data/results/results.json");
-
-        UserDaoImpl userDaoImpl = new UserDaoImpl(new JsonFileDaoImpl<>(User.class, "users", new File(usersPath), objectMapper));
-        TestDaoImpl testDaoImpl = new TestDaoImpl(new JsonFileDaoImpl<>(Test.class, "tests", new File(testsPath), objectMapper), servletContext.getRealPath("/WEB-INF/data/tests"));
-        ResultDaoImpl resultDaoImpl = new ResultDaoImpl(new JsonFileDaoImpl<>(Result.class, "results", new File(resultsPath), objectMapper));
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         ValidatorUserService validatorUserService = new ValidatorUserService();
@@ -66,10 +54,16 @@ public class ContextListener implements ServletContextListener {
         TestMapper testMapper = Mappers.getMapper(TestMapper.class);
         UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
-        UserServiceInterface userService = new UserService(userDaoImpl, encoder, validatorUserService, userMapper);
-        ResultServiceInterface resultService = new ResultService(resultDaoImpl, resultMapper);
-        TestServiceInterface testService = new TestService(testDaoImpl, validatorTestService, testMapper, questionMapper, answerMapper);
-        TestRunnerServiceInterface testRunnerService = new TestRunnerService(testDaoImpl, resultService, validatorTestRunnerService, testMapper, questionMapper, resultMapper);
+
+        TestDAOImpl testDAO = new TestDAOImpl();
+        UserDAOImpl userDAO = new UserDAOImpl();
+        ResultDAOImpl resultDAO = new ResultDAOImpl();
+
+
+        UserService userService = new UserServiceImpl(userDAO, encoder, validatorUserService, userMapper);
+        TestService testService = new TestServiceImpl(testDAO,userService, validatorTestService, testMapper, answerMapper);
+        ResultService resultService = new ResultServiceImpl(resultDAO, resultMapper,testService,userService);
+        TestRunnerService testRunnerService = new TestRunnerServiceImpl(testDAO, resultService, validatorTestRunnerService, testMapper, questionMapper, resultMapper, userMapper);
 
         servletContext.setAttribute("userService", userService);
         servletContext.setAttribute("testService", testService);
@@ -80,7 +74,7 @@ public class ContextListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        // Close ValidatorUtil resources
         ValidatorUtil.close();
+        HibernateUtil.shutdown();
     }
 }

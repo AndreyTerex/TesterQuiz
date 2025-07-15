@@ -1,9 +1,9 @@
 package servlets;
 
-import services.interfaces.ResultServiceInterface;
-import services.interfaces.TestRunnerServiceInterface;
-import services.interfaces.TestServiceInterface;
-import services.interfaces.UserServiceInterface;
+import services.interfaces.ResultService;
+import services.interfaces.TestRunnerService;
+import services.interfaces.TestService;
+import services.interfaces.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import constants.ServletPaths;
 import dto.AnswerDTO;
@@ -20,11 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BaseServlet extends HttpServlet {
-    protected UserServiceInterface userService;
-    protected TestServiceInterface testService;
+    protected UserService userService;
+    protected TestService testService;
     protected ObjectMapper objectMapper;
-    protected ResultServiceInterface resultService;
-    protected TestRunnerServiceInterface testRunnerService;
+    protected ResultService resultService;
+    protected TestRunnerService testRunnerService;
+    private static final int MAX_ANSWERS_PER_QUESTION = 10;
 
     /**
      * Initializes the base servlet and gets services from the application context
@@ -32,11 +33,11 @@ public class BaseServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        userService = (UserServiceInterface) config.getServletContext().getAttribute("userService");
-        testService = (TestServiceInterface) config.getServletContext().getAttribute("testService");
+        userService = (UserService) config.getServletContext().getAttribute("userService");
+        testService = (TestService) config.getServletContext().getAttribute("testService");
         objectMapper = (ObjectMapper) config.getServletContext().getAttribute("objectMapper");
-        resultService = (ResultServiceInterface) config.getServletContext().getAttribute("resultService");
-        testRunnerService = (TestRunnerServiceInterface) config.getServletContext().getAttribute("testRunnerService");
+        resultService = (ResultService) config.getServletContext().getAttribute("resultService");
+        testRunnerService = (TestRunnerService) config.getServletContext().getAttribute("testRunnerService");
     }
 
     /**
@@ -196,14 +197,14 @@ public class BaseServlet extends HttpServlet {
      */
     protected List<AnswerDTO> extractAnswersFromRequest(HttpServletRequest request) {
         List<AnswerDTO> answerDTOList = new ArrayList<>();
-        
-        for (int i = 1; i <= 10; i++) {
+
+        for (int i = 1; i <= MAX_ANSWERS_PER_QUESTION; i++) {
             String answerText = getParam(request, "answer" + i);
             String isCorrect = getParam(request, "correct" + i);
 
             if (answerText != null && !answerText.trim().isEmpty()) {
                AnswerDTO answer = dto.AnswerDTO.builder()
-                        .id(java.util.UUID.randomUUID())
+                        .id(null)
                         .answerText(answerText)
                         .correct("true".equals(isCorrect))
                         .build();
@@ -211,7 +212,7 @@ public class BaseServlet extends HttpServlet {
                 answerDTOList.add(answer);
             }
         }
-        testService.CheckCorrectAnswers(answerDTOList);
+        testService.checkCorrectAnswers(answerDTOList);
         
         return answerDTOList;
     }

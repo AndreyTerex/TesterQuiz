@@ -19,7 +19,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Edit Question - TesterQuiz</title>
-    <link rel="stylesheet" href="../../../styles.css">
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
 <div class="page page--create-test">

@@ -27,7 +27,7 @@ public class TestPassingHistoryServlet extends BaseServlet {
             redirectTo(resp, ServletPaths.TEST_HISTORY_JSP);
         } else {
             String id = pathInfo.substring(1).trim();
-            ResultDTO resultDTO = resultService.findById(id);
+            ResultDTO resultDTO = resultService.findByIdWithDetails(UUID.fromString(id));
             req.setAttribute("result", resultDTO);
             req.getRequestDispatcher(ServletPaths.TEST_RESULT_DETAILS_JSP).forward(req, resp);
         }

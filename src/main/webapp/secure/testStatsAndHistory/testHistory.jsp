@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Test History</title>
-    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
 <div class="main-container">
@@ -36,8 +36,8 @@
                         <td>${result.testTitle}</td>
                         <td>${result.score}</td>
                         <td> <c:choose>
-                            <c:when test="${fn:length(result.resultAnswers) > 0}">
-                                <fmt:formatNumber value="${(result.score * 100.0) / fn:length(result.resultAnswers)}" type="number" maxFractionDigits="1" />%
+                            <c:when test="${fn:length(result.answersInResults) > 0}">
+                                <fmt:formatNumber value="${(result.score * 100.0) / fn:length(result.answersInResults)}" type="number" maxFractionDigits="1" />%
                             </c:when>
                             <c:otherwise>0%</c:otherwise>
                         </c:choose></td>

@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 @WebServlet(urlPatterns = ServletPaths.ADD_QUESTION_PATH)
 public class AddQuestionToTestServlet extends BaseServlet {
@@ -29,7 +28,6 @@ public class AddQuestionToTestServlet extends BaseServlet {
             List<AnswerDTO> answerDTOList = extractAnswersFromRequest(req);
 
             testDTO = testService.addQuestion(testDTO, QuestionDTO.builder()
-                                                                  .id(UUID.randomUUID())
                                                                   .questionText(questionText)
                                                                   .answers(answerDTOList)
                                                                   .build());

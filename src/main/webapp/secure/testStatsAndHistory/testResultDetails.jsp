@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Test Result Details</title>
-    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
 <div class="main-container">
@@ -29,18 +29,18 @@
                 <fmt:formatDate value="${parsedTime}" pattern="HH:mm" />
             </p>
             <p><strong>Correct answers:</strong> <c:out value="${result.score}" /></p>
-            <p><strong>Total questions:</strong> <c:out value="${fn:length(result.resultAnswers)}" /></p>
+            <p><strong>Total questions:</strong> <c:out value="${fn:length(result.answersInResults)}" /></p>
             <p><strong>Success Rate:</strong>
                 <c:choose>
-                    <c:when test="${fn:length(result.resultAnswers) > 0}">
-                        <fmt:formatNumber value="${(result.score * 100.0) / fn:length(result.resultAnswers)}" type="number" maxFractionDigits="1" />%
+                    <c:when test="${fn:length(result.answersInResults) > 0}">
+                        <fmt:formatNumber value="${(result.score * 100.0) / fn:length(result.answersInResults)}" type="number" maxFractionDigits="1" />%
                     </c:when>
                     <c:otherwise>0%</c:otherwise>
                 </c:choose>
             </p>
         </div>
         <h4>Questions and Answers</h4>
-        <c:forEach var="answer" items="${result.resultAnswers}" varStatus="qStatus">
+        <c:forEach var="answer" items="${result.answersInResults}" varStatus="qStatus">
             <div class="question-block">
                 <p><strong>Q${qStatus.index + 1}:</strong> <c:out value="${answer.question.questionText}" /></p>
                 <p><strong>Your answers:</strong>

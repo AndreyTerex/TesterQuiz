@@ -1,63 +1,67 @@
-# 🚀 TesterQuiz: My First Java Web App
+# Web Test Project
 
-Welcome to TesterQuiz! This is my educational project, created to practice and demonstrate my skills in Java web development. I built it from scratch to learn how to create a full-featured web application.
+This is a web application for creating and taking tests. The project is developed in Java using Maven, Tomcat, PostgreSQL, and Hibernate. The entire development and runtime environment is packaged in Docker containers.
 
-## 🌱 What I Learned
+## Technologies
 
-This project was a great opportunity to dive deep into the following technologies and concepts:
+- **Backend:** Java, Servlets
+- **Server:** Apache Tomcat
+- **Database:** PostgreSQL
+- **ORM:** Hibernate
+- **Build:** Maven
+- **Containerization:** Docker, Docker Compose
 
-*   **Core Java & Backend Logic:** Building the application's foundation with Java.
-*   **servlets & JSP:** Handling web requests and creating dynamic web pages.
-*   **JSTL:** Simplifying JSP pages and keeping the code clean.
-*   **Database Interaction:** Working with a file-based database to store user and test data.
-*   **Authentication & Authorization:** Implementing a secure login system with user roles.
-*   **Maven:** Managing project dependencies and the build process.
-*   **Tomcat:** Deploying and running the application on a real web server.
+## How to Run
 
-## ✨ Key Features
+To run the project, you need to have Docker and Docker Compose installed.
 
-*   **User System:** Users can register and log in.
-*   **Role-Based Access:** Separate functionalities for regular `USER`s and `ADMIN`s.
-*   **Quiz Engine:** Users can take tests and see their scores.
-*   **Admin Panel:** Admins can create, edit, and delete tests and questions.
+1.  **Build and First Run:**
 
-## 🛠️ Tech Stack
-
-*   **Backend:** Java, servlets, JSP, JSTL
-*   **Frontend:** HTML, CSS
-*   **Build Tool:** Maven
-*   **Web Server:** Tomcat
-
-## 🏁 Getting Started
-
-If you want to run this project locally, here’s how:
-
-### Prerequisites
-
-*   JDK 8 or higher
-*   Apache Maven
-*   Apache Tomcat
-
-### Installation
-
-1.  **Clone the repo:**
-    ```sh
-    git clone https://github.com/your-username/web-test-project.git
-    cd web-test-project
+    Open a terminal in the project's root folder and run the command:
+    ```bash
+    docker-compose up --build
     ```
-    *(Remember to replace `your-username` with your actual GitHub username!)*
+    This command will build the application image, download the necessary images, and start all containers. The `init.sql` script will automatically create the required tables in the database.
 
-2.  **Build with Maven:**
-    ```sh
-    mvn clean install
+2.  **Subsequent Runs:**
+
+    For a normal start, use the command:
+    ```bash
+    docker-compose up
     ```
 
-3.  **Deploy to Tomcat:**
-    Copy the `.war` file from the `target/` directory to Tomcat's `webapps` folder, or configure the deployment in your IDE.
+3.  **Stopping the Project:**
 
-4.  **Run it!**
-    Open your browser and go to `http://localhost:8080/web-test-project-1.0-SNAPSHOT/`.
+    To stop all containers, run:
+    ```bash
+    docker-compose down
+    ```
 
----
+4.  **Full Rebuild (with DB data deletion):**
 
-This project was a fantastic learning experience. Thanks for checking it out!
+    If you need to completely recreate the database and images, run the following commands:
+    ```bash
+    # 1. Stop and remove containers
+    docker-compose down
+
+    # 2. Remove the PostgreSQL data volume
+    docker volume rm web-test-project_pgdata
+
+    # 3. Build and run the project again
+    docker-compose up --build
+    ```
+
+## Accessing Services
+
+After a successful launch, the following endpoints will be available:
+
+- **Web Application:** [http://localhost:8081](http://localhost:8081)
+- **Adminer (web interface for DB management):** [http://localhost:8080](http://localhost:8080)
+- **Direct connection to PostgreSQL:** `localhost:5433`
+
+**Credentials for Adminer:**
+- **System:** PostgreSQL
+- **Server:** `postgres`
+- **Username:** `myuser`
+- **Password:** `mypassword`
+- **Database:** `mydb`

@@ -4,6 +4,7 @@ import dto.TestProgressDTO;
 import dto.UserDTO;
 import entity.Test;
 import exceptions.ValidationException;
+import util.ValidatorUtil;
 
 public class ValidatorTestRunnerService {
     public void validateTestSessionStart(Test currentTest, UserDTO userDTO) {

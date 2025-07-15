@@ -1,0 +1,28 @@
+# Maven build output
+target/
+*.war
+*.jar
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+out/
+
+# VS Code
+.vscode/
+
+# OS / system files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Logs
+*.log
+
+# Misc
+*.class
+*.swp

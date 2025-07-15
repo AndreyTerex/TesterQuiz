@@ -14,6 +14,7 @@ import java.util.UUID;
 @Builder
 public class ResultDTO {
     private final UUID id;
+    private final Integer version;
     @NotNull(message = "User ID cannot be null.")
     private final UUID userId;
     @NotNull(message = "Test ID cannot be null.")
@@ -26,5 +27,6 @@ public class ResultDTO {
     private final String testTitle;
     @PastOrPresent(message = "Date cannot be in the future.")
     private final LocalDateTime date;
-    private final List<ResultAnswerDTO> resultAnswers;
+    @Builder.Default
+    private final List<AnswersInResultDTO> answersInResults = new java.util.ArrayList<>();
 }

@@ -4,6 +4,7 @@ import dto.AnswerDTO;
 import dto.QuestionDTO;
 import dto.TestDTO;
 import exceptions.ValidationException;
+import util.ValidatorUtil;
 
 import java.util.List;
 import java.util.UUID;
@@ -36,6 +37,15 @@ public class ValidatorTestService {
             if (!questionHaveCorrectAnswer) {
                 throw new ValidationException("Question must have at least one correct answer.");
             }
+        }
+    }
+
+    public void validateDetails(String title, String topic) {
+        if (title != null && (title.isBlank() || title.length() > 255)) {
+            throw new ValidationException("Title cannot be blank and must be less than 255 characters.");
+        }
+        if (topic != null && (topic.isBlank() || topic.length() > 255)) {
+            throw new ValidationException("Topic cannot be blank and must be less than 255 characters.");
         }
     }
 }

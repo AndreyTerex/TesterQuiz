@@ -22,8 +22,7 @@ public class RegistrationServlet extends BaseServlet {
         UserDTO userDTO = UserDTO.builder()
                 .username(getParam(req,"username"))
                 .build();
-        UserDTO registeredUser = userService.registerUser(userDTO, getParam(req, "password"));
-        setCurrentUser(req, registeredUser);
+        userService.registerUser(userDTO, getParam(req, "password"));
         setSessionSuccess(req, "Registration successful! Please log in.");
         redirectTo(resp, ServletPaths.LOGIN_PATH);
     }

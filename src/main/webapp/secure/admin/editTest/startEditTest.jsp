@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Edit Test- TesterQuiz</title>
-  <link rel="stylesheet" href="../../../styles.css">
+  <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
 <div class="page page--create-test">
@@ -20,12 +20,6 @@
             <c:out value="${sessionScope.error}"/>
         </div>
         <c:remove var="error" scope="session"/>
-    </c:if>
-    <c:if test="${not empty sessionScope.success}">
-        <div class="alert alert--success">
-            <c:out value="${sessionScope.success}"/>
-        </div>
-        <c:remove var="success" scope="session"/>
     </c:if>
     <c:if test="${not empty sessionScope.success}">
         <div class="alert alert--success">

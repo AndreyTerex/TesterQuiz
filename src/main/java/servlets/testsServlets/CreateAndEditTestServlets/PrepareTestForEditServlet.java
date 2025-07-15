@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @WebServlet(urlPatterns = ServletPaths.PREPARE_EDIT_TEST_PATH)
 public class PrepareTestForEditServlet extends BaseServlet {
@@ -18,7 +19,7 @@ public class PrepareTestForEditServlet extends BaseServlet {
             return;
         }
             String id = req.getParameter("id");
-            TestDTO testDTO = testService.findById(id);
+            TestDTO testDTO = testService.findDTOById(UUID.fromString(id));
             setCurrentTest(req, testDTO);
             redirectTo(resp, ServletPaths.EDIT_TEST_PATH);
     }

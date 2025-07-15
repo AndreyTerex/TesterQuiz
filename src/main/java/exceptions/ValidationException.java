@@ -11,7 +11,7 @@ import java.util.List;
  * so that they can be conveniently displayed to the user.
  */
 @Getter
-public class ValidationException extends RuntimeException {
+public class ValidationException extends BusinessException {
 
     private final List<String> errors;
 

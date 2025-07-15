@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class TestDTO {
     @NotBlank(message = "title must not be blank")
     @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters long.")
@@ -23,6 +23,7 @@ public class TestDTO {
     @Pattern(regexp = "^[a-zA-Z0-9а-яА-Я ]+$", message = "Topic can only contain letters, numbers, and spaces.")
     private final String topic;
     private final UUID id;
+    private final Integer version;
     private final UUID creatorId;
     private final List<QuestionDTO> questions;
 }

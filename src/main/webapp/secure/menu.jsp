@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Main Menu - TesterQuiz</title>
-  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
 <div class="page page--menu">
@@ -32,7 +32,7 @@
       <div class="menu-section__items">
         <a href="/secure/tests.jsp" class="menu-card">
           <div class="menu-card__icon">📝</div>
-          <h3 class="menu-card__title">Take Test</h3>
+          <h3 class="menu-card__title">Browse Test</h3>
           <p class="menu-card__description">Browse and take available tests</p>
         </a>
         <a href="/secure/results" class="menu-card">

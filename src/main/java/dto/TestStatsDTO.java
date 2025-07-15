@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class TestStatsDTO {
     private final String testTitle;
-    private final Integer totalPassed;
+    private final Long totalPassed;
     private final Integer totalQuestions;
     private final Integer maxScore;
     private final LocalDateTime lastPassed;

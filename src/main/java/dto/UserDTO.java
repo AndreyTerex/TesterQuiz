@@ -9,6 +9,7 @@ import lombok.Data;
 
 import java.util.UUID;
 
+
 @Data
 @AllArgsConstructor
 @Builder
@@ -19,4 +20,5 @@ public class UserDTO {
     private final String username;
     private final String role;
     private final UUID id;
+    private final Integer version;
 }

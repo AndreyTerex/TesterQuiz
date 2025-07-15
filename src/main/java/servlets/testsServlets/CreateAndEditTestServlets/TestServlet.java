@@ -29,7 +29,7 @@ public class TestServlet extends BaseServlet {
         }
 
         String id = pathInfo.substring(1).trim();
-        TestDTO testDTO = testService.findById(id);
+        TestDTO testDTO = testService.findDTOById(UUID.fromString(id));
         sendJsonResponse(resp, testDTO);
     }
 
@@ -44,7 +44,7 @@ public class TestServlet extends BaseServlet {
                 forwardTo(req, resp, ServletPaths.MENU_PATH);
                 return;
             }
-            resultService.saveResult(resultDTO);
+            resultService.buildAndSaveFinalResult(resultDTO);
             setSessionSuccess(req, "Test submitted successfully!");
             redirectTo(resp, ServletPaths.MENU_PATH);
             return;
@@ -56,7 +56,6 @@ public class TestServlet extends BaseServlet {
         TestDTO testDTO = TestDTO.builder()
                 .title((getParam(req, "title")))
                 .topic((getParam(req, "topic")))
-                .id(UUID.randomUUID())
                 .creatorId(user.getId())
                 .questions(new ArrayList<>())
                 .build();

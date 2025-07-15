@@ -1,6 +1,6 @@
 package exceptions;
 
-public class SaveException extends RuntimeException {
+public class SaveException extends BusinessException {
     public SaveException(String message) {
         super(message);
     }

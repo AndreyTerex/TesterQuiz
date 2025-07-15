@@ -1,6 +1,6 @@
 package exceptions;
 
-public class TestDeletionFailedException extends RuntimeException {
+public class TestDeletionFailedException extends BusinessException {
     public TestDeletionFailedException(String message) {
         super(message);
     }

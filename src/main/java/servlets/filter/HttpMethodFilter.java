@@ -1,9 +1,8 @@
 package servlets.filter;
 
-import constants.ServletPaths;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
@@ -12,7 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
 
-@WebFilter(urlPatterns = ServletPaths.HTTP_METHOD_FILTER_PATTERN)
 public class HttpMethodFilter extends HttpFilter {
     
     private static final Set<String> SUPPORTED_METHODS = Set.of("DELETE", "PUT", "PATCH");

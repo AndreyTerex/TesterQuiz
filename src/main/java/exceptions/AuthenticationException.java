@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Getter
-public class AuthenticationException extends RuntimeException {
+public class AuthenticationException extends BusinessException {
     private final List<String> errors;
 
     public AuthenticationException(String message) {

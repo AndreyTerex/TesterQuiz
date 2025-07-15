@@ -2,6 +2,7 @@ package validators;
 
 import dto.UserDTO;
 import exceptions.ValidationException;
+import util.ValidatorUtil;
 
 
 public class ValidatorUserService {

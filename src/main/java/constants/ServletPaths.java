@@ -35,10 +35,5 @@ public interface ServletPaths {
     String ADMIN_STATS_JSP = "/secure/admin/adminStatisticPage.jsp";
     String TEST_HISTORY_JSP = "/secure/testStatsAndHistory/testHistory.jsp";
     String TEST_RESULT_DETAILS_JSP = "/secure/testStatsAndHistory/testResultDetails.jsp";
-    String ERROR_JSP = "/error.jsp";
-
-    // Filters
-    String SECURE_FILTER_PATTERN = "/secure/*";
-    String ADMIN_FILTER_PATTERN = "/secure/admin/*";
-    String HTTP_METHOD_FILTER_PATTERN = "/*";
+    String ERROR_JSP = "/WEB-INF/error.jsp";
 }

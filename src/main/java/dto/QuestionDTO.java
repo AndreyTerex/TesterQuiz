@@ -11,9 +11,10 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class QuestionDTO {
     private final UUID id;
+    private final Integer version;
     @Min(value = 1, message = "Question number must be a positive integer.")
     private final Integer questionNumber;
     @NotBlank(message = "question text must not be blank")
