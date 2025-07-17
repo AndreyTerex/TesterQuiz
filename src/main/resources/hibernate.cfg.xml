@@ -5,10 +5,8 @@
 
 <hibernate-configuration>
     <session-factory>
-        <!-- 1. Указываем Hibernate использовать HikariCP в качестве провайдера соединений -->
         <property name="hibernate.connection.provider_class">org.hibernate.hikaricp.internal.HikariCPConnectionProvider</property>
 
-        <!-- 2. Настройки для самого HikariCP. -->
         <property name="hibernate.hikari.dataSourceClassName">org.postgresql.ds.PGSimpleDataSource</property>
         <property name="hibernate.hikari.dataSource.serverName">postgres</property>
         <property name="hibernate.hikari.dataSource.portNumber">5432</property>
@@ -16,7 +14,6 @@
         <property name="hibernate.hikari.dataSource.user">myuser</property>
         <property name="hibernate.hikari.dataSource.password">mypassword</property>
 
-        <!-- Необязательные, но рекомендуемые настройки производительности -->
         <property name="hibernate.hikari.maximumPoolSize">20</property>
         <property name="hibernate.hikari.minimumIdle">3</property>
         <property name="hibernate.hikari.idleTimeout">300000</property>
@@ -31,7 +28,6 @@
 
         <property name="hibernate.hbm2ddl.auto">validate</property>
 
-        <!-- List of annotated entity classes -->
         <mapping class="entity.User"/>
         <mapping class="entity.Test"/>
         <mapping class="entity.Question"/>
