@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class UserDTO {
     @NotBlank(message = "Username cannot be blank or contain only whitespace characters.")
     @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters long.")

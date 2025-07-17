@@ -7,7 +7,7 @@ import lombok.Data;
 
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class TestProgressDTO {
     @NotNull(message = "Result not found")
     private final ResultDTO result;

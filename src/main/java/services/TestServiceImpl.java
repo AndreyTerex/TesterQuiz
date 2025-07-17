@@ -12,9 +12,7 @@ import exceptions.SaveException;
 import exceptions.TestDeletionFailedException;
 import exceptions.ValidationException;
 import mappers.AnswerMapper;
-import mappers.QuestionMapper;
 import mappers.TestMapper;
-import mappers.UserMapper;
 import services.interfaces.TestService;
 import services.interfaces.UserService;
 import validators.ValidatorTestService;
@@ -111,7 +109,7 @@ public class TestServiceImpl implements TestService {
         validatorTestService.validate(testDTO);
         validatorTestService.validateQuestions(testDTO.getQuestions());
         Test currentTest = testMapper.toEntity(testDTO);
-        currentTest.setCreator(userService.findUserById(testDTO.getCreatorId()));
+        currentTest.setCreator(validatorTestService.requireNonNullOrValidation(userService.findUserById(testDTO.getCreatorId()), "User not found"));
         linkQuestionsAndAnswers(currentTest);
 
         try {

@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class TestSessionDTO {
     private final QuestionDTO currentQuestion;
     private final String roundedEndTime;

@@ -19,7 +19,6 @@ import java.util.UUID;
 public class AnswersInResult {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
     private UUID id;
 
     @ManyToOne

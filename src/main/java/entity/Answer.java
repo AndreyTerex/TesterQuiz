@@ -1,6 +1,7 @@
 package entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,21 +21,20 @@ import java.util.UUID;
 public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
     private UUID id;
 
-    @Column(name = "answer_text", nullable = false, length = 1000)
+    @NotNull
+    @Column(name = "answer_text")
     private String answerText;
 
-    @Column(name = "correct", nullable = false)
     private boolean correct;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "question_id")
     @ToString.Exclude
     private Question question;
 
     @Version
-    @Column(name = "version")
     private Integer version;
 }

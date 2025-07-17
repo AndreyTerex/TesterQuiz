@@ -10,6 +10,7 @@ import mappers.ResultMapper;
 import services.interfaces.ResultService;
 import services.interfaces.TestService;
 import services.interfaces.UserService;
+import validators.ValidatorResultService;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -21,12 +22,15 @@ public class ResultServiceImpl implements ResultService {
     private final ResultMapper resultMapper;
     private final UserService userService;
     private final TestService testService;
+    private final ValidatorResultService validatorResultService;
 
-    public ResultServiceImpl(ResultDAO resultDao, ResultMapper resultMapper, TestService testService, UserService userService) {
+    public ResultServiceImpl(ResultDAO resultDao, ResultMapper resultMapper, TestService testService, UserService userService, ValidatorResultService validatorResultService) {
         this.resultDao = resultDao;
         this.resultMapper = resultMapper;
         this.userService = userService;
         this.testService = testService;
+        this.validatorResultService = validatorResultService;
+
     }
 
     /**
@@ -136,9 +140,15 @@ public class ResultServiceImpl implements ResultService {
     }
 
     private Result buildFinalResult(ResultDTO resultDTO) {
-        User user = userService.findUserById(resultDTO.getUserId());
-        Test test = testService.findTestById(resultDTO.getTestId());
-        Result result = resultMapper.toEntity(resultDTO);
+        User user = validatorResultService.requireNonNullOrValidation(
+                userService.findUserById(resultDTO.getUserId()), "User not found"
+        );
+        Test test = validatorResultService.requireNonNullOrValidation(
+                testService.findTestById(resultDTO.getTestId()), "Test not found"
+        );
+        Result result = validatorResultService.requireNonNullOrValidation(
+                resultMapper.toEntity(resultDTO), "Result mapping failed"
+        );
         result.setUser(user);
         result.setTest(test);
         result.setTestTitle(test.getTitle());

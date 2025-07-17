@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 public class TestStatsDTO {
     private final String testTitle;

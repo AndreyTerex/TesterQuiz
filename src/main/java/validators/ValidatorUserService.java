@@ -5,7 +5,7 @@ import exceptions.ValidationException;
 import util.ValidatorUtil;
 
 
-public class ValidatorUserService {
+public class ValidatorUserService extends ValidatorServiceBase {
     private static final int MIN_PASSWORD_LENGTH = 8;
     public void validateUserDto(UserDTO userDTO) {
         ValidatorUtil.validate(userDTO);

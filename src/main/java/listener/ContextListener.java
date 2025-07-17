@@ -22,6 +22,7 @@ import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import util.HibernateUtil;
+import validators.ValidatorResultService;
 import validators.ValidatorTestRunnerService;
 import validators.ValidatorTestService;
 import validators.ValidatorUserService;
@@ -47,6 +48,8 @@ public class ContextListener implements ServletContextListener {
         ValidatorUserService validatorUserService = new ValidatorUserService();
         ValidatorTestService validatorTestService = new ValidatorTestService();
         ValidatorTestRunnerService validatorTestRunnerService = new ValidatorTestRunnerService();
+        ValidatorResultService validatorResultService = new ValidatorResultService();
+
 
         AnswerMapper answerMapper = Mappers.getMapper(AnswerMapper.class);
         QuestionMapper questionMapper = Mappers.getMapper(QuestionMapper.class);
@@ -62,7 +65,7 @@ public class ContextListener implements ServletContextListener {
 
         UserService userService = new UserServiceImpl(userDAO, encoder, validatorUserService, userMapper);
         TestService testService = new TestServiceImpl(testDAO,userService, validatorTestService, testMapper, answerMapper);
-        ResultService resultService = new ResultServiceImpl(resultDAO, resultMapper,testService,userService);
+        ResultService resultService = new ResultServiceImpl(resultDAO, resultMapper,testService,userService,validatorResultService);
         TestRunnerService testRunnerService = new TestRunnerServiceImpl(testDAO, resultService, validatorTestRunnerService, testMapper, questionMapper, resultMapper, userMapper);
 
         servletContext.setAttribute("userService", userService);

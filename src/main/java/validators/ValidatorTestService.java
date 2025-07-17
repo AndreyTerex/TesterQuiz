@@ -9,8 +9,11 @@ import util.ValidatorUtil;
 import java.util.List;
 import java.util.UUID;
 
-public class ValidatorTestService {
+public class ValidatorTestService extends ValidatorServiceBase  {
     public void validate(TestDTO testDTO) {
+        if(testDTO == null){
+            throw new ValidationException("User not found");
+        }
         ValidatorUtil.validate(testDTO);
     }
 
@@ -46,6 +49,12 @@ public class ValidatorTestService {
         }
         if (topic != null && (topic.isBlank() || topic.length() > 255)) {
             throw new ValidationException("Topic cannot be blank and must be less than 255 characters.");
+        }
+        if (title == null || !title.matches("^(?!\\d+$)[a-zA-Z0-9]+$")) {
+            throw new ValidationException("Title must contain only letters and digits and cannot be only digits");
+        }
+        if (topic == null || !topic.matches("^(?!\\d+$)[a-zA-Z0-9]+$")) {
+            throw new ValidationException("Topic must contain only letters and digits and cannot be only digits");
         }
     }
 }

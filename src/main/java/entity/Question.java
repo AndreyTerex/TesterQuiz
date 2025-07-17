@@ -1,6 +1,7 @@
 package entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,13 +23,13 @@ import java.util.UUID;
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
     private UUID id;
 
     @Column(name = "question_number")
     private Integer questionNumber;
 
-    @Column(name = "question_text", nullable = false, length = 1000)
+    @NotNull
+    @Column(name = "question_text")
     private String questionText;
 
     @ManyToOne
@@ -41,6 +42,5 @@ public class Question {
     private List<Answer> answers;
 
     @Version
-    @Column(name = "version")
     private Integer version;
 }

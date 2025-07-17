@@ -10,8 +10,8 @@
 
         <!-- 2. Настройки для самого HikariCP. -->
         <property name="hibernate.hikari.dataSourceClassName">org.postgresql.ds.PGSimpleDataSource</property>
-        <property name="hibernate.hikari.dataSource.serverName">postgres</property>
-        <property name="hibernate.hikari.dataSource.portNumber">5432</property>
+        <property name="hibernate.hikari.dataSource.serverName">localhost</property>
+        <property name="hibernate.hikari.dataSource.portNumber">5433</property>
         <property name="hibernate.hikari.dataSource.databaseName">mydb</property>
         <property name="hibernate.hikari.dataSource.user">myuser</property>
         <property name="hibernate.hikari.dataSource.password">mypassword</property>

@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class AnswersInResultDTO {
     private final UUID id;
     private final UUID resultId;

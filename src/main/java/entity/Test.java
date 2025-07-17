@@ -1,6 +1,7 @@
 package entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,15 +24,15 @@ import java.util.UUID;
 public class Test {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
     private UUID id;
 
-    @Column(name = "title", nullable = false)
+    @NotNull
     private String title;
 
-    @Column(name = "topic", nullable = false)
+    @NotNull
     private String topic;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "creator_id")
     @ToString.Exclude
@@ -43,7 +44,6 @@ public class Test {
     private List<Question> questions;
 
     @Version
-    @Column(name = "version")
     private Integer version;
 
     @Override
