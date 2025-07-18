@@ -50,10 +50,10 @@ public class ValidatorTestService extends ValidatorServiceBase  {
         if (topic != null && (topic.isBlank() || topic.length() > 255)) {
             throw new ValidationException("Topic cannot be blank and must be less than 255 characters.");
         }
-        if (title == null || !title.matches("^(?!\\d+$)[a-zA-Z0-9]+$")) {
+        if (title == null || !title.matches("^(?!\\d+$)[a-zA-Zа-яА-ЯёЁ0-9]+$")) {
             throw new ValidationException("Title must contain only letters and digits and cannot be only digits");
         }
-        if (topic == null || !topic.matches("^(?!\\d+$)[a-zA-Z0-9]+$")) {
+        if (topic == null || !topic.matches("^(?!\\d+$)[a-zA-Zа-яА-ЯёЁ0-9]+$")) {
             throw new ValidationException("Topic must contain only letters and digits and cannot be only digits");
         }
     }

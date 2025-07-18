@@ -142,16 +142,6 @@ public class TestServiceImpl implements TestService {
         return testMapper.toDTO(findTestByIdOrThrow(testId));
     }
 
-    public void checkCorrectAnswers(List<AnswerDTO> answers) {
-        if (answers == null || answers.isEmpty()) {
-            throw new ValidationException("Question must have at least one answer.");
-        }
-        boolean questionHaveCorrectAnswer = answers.stream().anyMatch(AnswerDTO::isCorrect);
-        if (!questionHaveCorrectAnswer) {
-            throw new ValidationException("Question must have at least one correct answer.");
-        }
-    }
-
     private Test findTestByIdOrThrow(UUID testId) {
         validatorTestService.validateTestId(testId);
         return testDao.findByIdWithDetails(testId).orElseThrow(() -> new ValidationException("Test not found with id: " + testId));

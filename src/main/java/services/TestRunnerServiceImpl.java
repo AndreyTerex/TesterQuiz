@@ -43,7 +43,7 @@ public class TestRunnerServiceImpl implements TestRunnerService {
         User user = userMapper.toEntity(userDTO);
 
         LocalDateTime startTime = LocalDateTime.now();
-        LocalDateTime roundedEndTime = startTime.plusMinutes(TEST_DURATION_IN_MINUTES).withSecond(59).withNano(999999999);
+        LocalDateTime roundedEndTime = startTime.plusMinutes(TEST_DURATION_IN_MINUTES);
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
         String roundedEndTime_formatted = roundedEndTime.format(formatter);
 

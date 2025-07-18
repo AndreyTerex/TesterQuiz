@@ -1,6 +1,5 @@
 package services.interfaces;
 
-import dto.AnswerDTO;
 import dto.QuestionDTO;
 import dto.TestDTO;
 import entity.Test;
@@ -39,7 +38,4 @@ public interface TestService {
 
     /** Updates the title and topic of an existing test. */
     TestDTO updateTestDetails(UUID testId, String newTitle, String newTopic);
-
-    /** Checks if a list of answers for a question contains at least one correct answer. */
-    void checkCorrectAnswers(List<AnswerDTO> answers);
 }

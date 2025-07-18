@@ -1,5 +1,6 @@
 package servlets;
 
+import exceptions.ValidationException;
 import services.interfaces.ResultService;
 import services.interfaces.TestRunnerService;
 import services.interfaces.TestService;
@@ -204,7 +205,6 @@ public class BaseServlet extends HttpServlet {
 
             if (answerText != null && !answerText.trim().isEmpty()) {
                AnswerDTO answer = dto.AnswerDTO.builder()
-                        .id(null)
                         .answerText(answerText)
                         .correct("true".equals(isCorrect))
                         .build();
@@ -212,7 +212,13 @@ public class BaseServlet extends HttpServlet {
                 answerDTOList.add(answer);
             }
         }
-        testService.checkCorrectAnswers(answerDTOList);
+        if (answerDTOList.isEmpty()) {
+            throw new ValidationException("Question must have at least one answer.");
+        }
+        boolean questionHaveCorrectAnswer = answerDTOList.stream().anyMatch(AnswerDTO::isCorrect);
+        if (!questionHaveCorrectAnswer) {
+            throw new ValidationException("Question must have at least one correct answer.");
+        }
         
         return answerDTOList;
     }

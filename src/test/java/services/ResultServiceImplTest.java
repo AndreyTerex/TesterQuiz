@@ -74,10 +74,14 @@ class ResultServiceImplTest {
         // ARRANGE
         ResultDTO resultDTO = mock(ResultDTO.class);
         Result result = mock(Result.class);
-        when(userService.findUserById(any())).thenReturn(TestDataBuilders.user());
         entity.Test test = TestDataBuilders.test();
+        Question question = TestDataBuilders.question(new ArrayList<>(), 1);
+        test.setQuestions(List.of(question));
+        when(userService.findUserById(any())).thenReturn(TestDataBuilders.user());
         when(testService.findTestById(any())).thenReturn(test);
         when(resultMapper.toEntity(resultDTO)).thenReturn(result);
+        when(result.getTest()).thenReturn(test);
+        when(result.getAnswersInResults()).thenReturn(new ArrayList<>());
 
         // ACT
         resultService.buildAndSaveFinalResult(resultDTO);
@@ -92,10 +96,14 @@ class ResultServiceImplTest {
         // ARRANGE
         ResultDTO resultDTO = mock(ResultDTO.class);
         Result result = mock(Result.class);
-        when(userService.findUserById(any())).thenReturn(TestDataBuilders.user());
         entity.Test test = TestDataBuilders.test();
+        Question question = TestDataBuilders.question(new ArrayList<>(), 1);
+        test.setQuestions(List.of(question));
+        when(userService.findUserById(any())).thenReturn(TestDataBuilders.user());
         when(testService.findTestById(any())).thenReturn(test);
         when(resultMapper.toEntity(resultDTO)).thenReturn(result);
+        when(result.getTest()).thenReturn(test);
+        when(result.getAnswersInResults()).thenReturn(new ArrayList<>());
         doThrow(new DataAccessException("fail")).when(resultDao).save(any());
 
         // ACT & ASSERT
@@ -238,9 +246,11 @@ class ResultServiceImplTest {
         ResultDTO resultDTO = mock(ResultDTO.class);
         when(userService.findUserById(any())).thenReturn(TestDataBuilders.user());
         entity.Test test = TestDataBuilders.test();
+        test.setQuestions(new ArrayList<>());
         when(testService.findTestById(any())).thenReturn(test);
         Result result = mock(Result.class);
         when(resultMapper.toEntity(resultDTO)).thenReturn(result);
+        when(result.getTest()).thenReturn(test);
         AnswersInResultDTO airDto = AnswersInResultDTO.builder()
                 .question(QuestionDTO.builder().id(UUID.randomUUID()).build())
                 .selectedAnswers(new ArrayList<>())
@@ -259,12 +269,14 @@ class ResultServiceImplTest {
         ResultDTO resultDTO = mock(ResultDTO.class);
         when(userService.findUserById(any())).thenReturn(TestDataBuilders.user());
         entity.Test test = TestDataBuilders.test();
+        // Вопрос с пустым списком ответов
         Question question = TestDataBuilders.question(new ArrayList<>(), 1);
         UUID qId = question.getId();
         test.setQuestions(List.of(question));
         when(testService.findTestById(any())).thenReturn(test);
         Result result = mock(Result.class);
         when(resultMapper.toEntity(resultDTO)).thenReturn(result);
+        when(result.getTest()).thenReturn(test);
         UUID missingAnswerId = UUID.randomUUID();
         AnswerDTO answerDTO = AnswerDTO.builder().id(missingAnswerId).build();
         AnswersInResultDTO airDto = AnswersInResultDTO.builder()

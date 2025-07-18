@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.SoftDelete;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +18,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "questions")
-@SoftDelete
+@BatchSize(size = 10)
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -32,7 +31,7 @@ public class Question {
     @Column(name = "question_text")
     private String questionText;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "test_id")
     @ToString.Exclude
     private Test test;

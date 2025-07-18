@@ -4,8 +4,7 @@ import dao.ResultDAO;
 import entity.AnswersInResult;
 import entity.Result;
 import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import util.HibernateSessionManager;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -27,30 +26,26 @@ public class ResultDAOImpl extends GenericBaseDAOImpl<Result, UUID> implements R
     }
 
     public Optional<Result> findByIdWithDetails(UUID resultId) {
-        Session session = HibernateSessionManager.getSession();
+        return executeWithResult(session -> {
+            String hql = "SELECT r FROM Result r " +
+                    "LEFT JOIN FETCH r.user " +
+                    "LEFT JOIN FETCH r.test " +
+                    "LEFT JOIN FETCH r.answersInResults air " +
+                    "WHERE r.id = :resultId";
 
-        String hql = "SELECT r FROM Result r " +
-                "LEFT JOIN FETCH r.user " +
-                "LEFT JOIN FETCH r.test " +
-                "LEFT JOIN FETCH r.answersInResults air " +
-                "WHERE r.id = :resultId";
+            Result result = session.createQuery(hql, Result.class)
+                    .setParameter("resultId", resultId)
+                    .uniqueResult();
 
-        Result result = session.createQuery(hql, Result.class)
-                .setParameter("resultId", resultId)
-                .uniqueResult();
-
-        if (result == null) {
-            return Optional.empty();
-        }
-
-        if (result.getAnswersInResults() != null) {
-            for (AnswersInResult air : result.getAnswersInResults()) {
-                Hibernate.initialize(air.getQuestion());
-                Hibernate.initialize(air.getSelectedAnswers());
+            if (result != null && result.getAnswersInResults() != null) {
+                for (AnswersInResult air : result.getAnswersInResults()) {
+                    Hibernate.initialize(air.getQuestion());
+                    Hibernate.initialize(air.getSelectedAnswers());
+                }
             }
-        }
 
-        return Optional.of(result);
+            return Optional.ofNullable(result);
+        }, "Failed to find result with details for id: " + resultId);
     }
 
     public Long getCount() {

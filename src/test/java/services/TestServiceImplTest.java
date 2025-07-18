@@ -3,7 +3,6 @@ package services;
 import dao.TestDAO;
 import dto.*;
 import entity.User;
-import entity.Answer;
 import entity.Question;
 import exceptions.DataAccessException;
 import exceptions.SaveException;
@@ -134,25 +133,7 @@ class TestServiceImplTest {
         assertEquals(dto, result.get(0));
     }
 
-    @Test
-    @DisplayName("checkCorrectAnswers throws ValidationException if no correct answer")
-    void checkCorrectAnswers_throwsIfNoCorrect() {
-        // ARRANGE
-        AnswerDTO answer = TestDataBuilders.answerDTO(UUID.randomUUID()).toBuilder().correct(false).build();
-        List<AnswerDTO> answers = List.of(answer);
-        // ACT & ASSERT
-        assertThrows(ValidationException.class, () -> testService.checkCorrectAnswers(answers));
-    }
 
-    @Test
-    @DisplayName("checkCorrectAnswers does not throw if at least one answer is correct")
-    void checkCorrectAnswers_okIfCorrect() {
-        // ARRANGE
-        AnswerDTO answer = TestDataBuilders.answerDTO(UUID.randomUUID()).toBuilder().correct(true).build();
-        List<AnswerDTO> answers = List.of(answer);
-        // ACT & ASSERT
-        assertDoesNotThrow(() -> testService.checkCorrectAnswers(answers));
-    }
     @Test
     @DisplayName("checkTestTitleAndValidate does not throw if title does not exist")
     void checkTestTitleAndValidate_okIfTitleNotExists() {
@@ -214,15 +195,6 @@ class TestServiceImplTest {
         // ASSERT
         assertNotNull(result);
         assertTrue(result.isEmpty());
-    }
-
-    @Test
-    @DisplayName("checkCorrectAnswers throws ValidationException if answers are null or empty")
-    void checkCorrectAnswers_throwsIfNullOrEmpty() {
-        // ARRANGE
-        // ACT & ASSERT
-        assertThrows(ValidationException.class, () -> testService.checkCorrectAnswers(null));
-        assertThrows(ValidationException.class, () -> testService.checkCorrectAnswers(new ArrayList<>()));
     }
 
     @Test

@@ -97,7 +97,7 @@ public class ResultServiceImpl implements ResultService {
 
         return resultsByTitle.entrySet().stream()
                 .map(entry -> buildStats(entry.getKey(), entry.getValue()))
-                .sorted(Comparator.comparing(TestStatsDTO::getTestTitle))
+                .sorted(Comparator.comparing(TestStatsDTO::getTotalPassed).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -140,24 +140,25 @@ public class ResultServiceImpl implements ResultService {
     }
 
     private Result buildFinalResult(ResultDTO resultDTO) {
-        User user = validatorResultService.requireNonNullOrValidation(
-                userService.findUserById(resultDTO.getUserId()), "User not found"
-        );
-        Test test = validatorResultService.requireNonNullOrValidation(
-                testService.findTestById(resultDTO.getTestId()), "Test not found"
-        );
-        Result result = validatorResultService.requireNonNullOrValidation(
-                resultMapper.toEntity(resultDTO), "Result mapping failed"
-        );
+        User user = validatorResultService.requireNonNullOrValidation(userService.findUserById(resultDTO.getUserId()), "User not found");
+        Test test = validatorResultService.requireNonNullOrValidation(testService.findTestById(resultDTO.getTestId()), "Test not found");
+        Result result = validatorResultService.requireNonNullOrValidation(resultMapper.toEntity(resultDTO), "Result mapping failed");
+
         result.setUser(user);
         result.setTest(test);
         result.setTestTitle(test.getTitle());
         result.setAnswersInResults(new ArrayList<>());
 
-        Map<UUID, Question> questionMap = test.getQuestions().stream()
+        fillAnswersInResults(result, resultDTO.getAnswersInResults());
+
+        return result;
+    }
+
+    private void fillAnswersInResults(Result result, List<AnswersInResultDTO> dtoList) {
+        Map<UUID, Question> questionMap = result.getTest().getQuestions().stream()
                 .collect(Collectors.toMap(Question::getId, Function.identity()));
 
-        for (AnswersInResultDTO answersInResultDTO : resultDTO.getAnswersInResults()) {
+        for (AnswersInResultDTO answersInResultDTO : dtoList) {
             UUID questionId = answersInResultDTO.getQuestion().getId();
             Question question = Optional.ofNullable(questionMap.get(questionId))
                     .orElseThrow(() -> new SaveException("Question not found for id: " + questionId));
@@ -175,7 +176,6 @@ public class ResultServiceImpl implements ResultService {
 
             result.getAnswersInResults().add(answersInResult);
         }
-        return result;
     }
 
 

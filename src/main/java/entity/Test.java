@@ -21,6 +21,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "tests")
 @SoftDelete
+@BatchSize(size = 10)
 public class Test {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

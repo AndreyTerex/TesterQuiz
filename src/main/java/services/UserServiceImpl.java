@@ -43,9 +43,7 @@ public class UserServiceImpl implements UserService {
         validatorUserService.validatePassword(password);
         String username = userDTO.getUsername();
 
-        userDao.findByUsername(username).ifPresent(u -> {
-            throw new RegistrationException(String.format(USERNAME_ALREADY_EXISTS, username));
-        });
+        userDao.findByUsername(username).ifPresent(u -> { throw new RegistrationException(String.format(USERNAME_ALREADY_EXISTS, username)); });
 
         User userToSave = User.builder()
                 .username(username)

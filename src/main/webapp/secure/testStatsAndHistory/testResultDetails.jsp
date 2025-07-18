@@ -42,13 +42,27 @@
         <h4>Questions and Answers</h4>
         <c:forEach var="answer" items="${result.answersInResults}" varStatus="qStatus">
             <div class="question-block">
-                <p><strong>Q${qStatus.index + 1}:</strong> <c:out value="${answer.question.questionText}" /></p>
-                <p><strong>Your answers:</strong>
-                    <c:forEach var="ans" items="${answer.selectedAnswers}" varStatus="aStatus">
-                        <c:out value="${ans.answerText}" />
-                        <c:if test="${!aStatus.last}">, </c:if>
-                    </c:forEach>
-                </p>
+                <c:choose>
+                    <c:when test="${not empty answer.question}">
+                        <c:choose>
+                            <c:when test="${empty answer.selectedAnswers}">
+                                <p><strong>Q${qStatus.index + 1}:</strong> Question was modified</p>
+                            </c:when>
+                            <c:otherwise>
+                                <p><strong>Q${qStatus.index + 1}:</strong> <c:out value="${answer.question.questionText}" /></p>
+                                <p><strong>Your answers:</strong>
+                                    <c:forEach var="ans" items="${answer.selectedAnswers}" varStatus="aStatus">
+                                        <c:out value="${ans.answerText}" />
+                                        <c:if test="${!aStatus.last}">, </c:if>
+                                    </c:forEach>
+                                </p>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:when>
+                    <c:otherwise>
+                        <p><strong>Q${qStatus.index + 1}:</strong> Question was modified</p>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </c:forEach>
     </c:if>
