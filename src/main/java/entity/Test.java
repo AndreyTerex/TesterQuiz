@@ -2,19 +2,17 @@ package entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.SoftDelete;
+import org.hibernate.proxy.HibernateProxy;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -39,7 +37,7 @@ public class Test {
     @ToString.Exclude
     private User creator;
 
-    @OneToMany(mappedBy = "test", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "test", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @BatchSize(size = 30)
     @ToString.Exclude
     private List<Question> questions;
@@ -48,14 +46,20 @@ public class Test {
     private Integer version;
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Test)) return false;
-        return Objects.equals(id, ((Test) o).id);
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        Test test =  (Test) o;
+        return getId() != null && Objects.equals(getId(), test.getId());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public final int hashCode() {
+        return this instanceof HibernateProxy
+                ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
+                : getClass().hashCode();
     }
 }
