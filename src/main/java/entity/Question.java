@@ -3,7 +3,8 @@ package entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.List;
@@ -17,7 +18,6 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "questions")
-@BatchSize(size = 10)
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -36,7 +36,7 @@ public class Question {
     private Test test;
 
     @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, orphanRemoval = true, fetch = FetchType.LAZY)
-    @BatchSize(size = 30)
+    @Fetch(FetchMode.SUBSELECT)
     private List<Answer> answers;
 
     @Version

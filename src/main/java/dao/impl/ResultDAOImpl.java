@@ -16,11 +16,11 @@ public class ResultDAOImpl extends GenericBaseDAOImpl<Result, UUID> implements R
     }
 
     public List<Result> getAllResultsByUserId(UUID id) {
-        String hql = "FROM Result r WHERE r.user.id = :userId";
-        return executeWithResult(session ->
-                        session.createQuery(hql, Result.class)
-                                .setParameter("userId", id)
-                                .list(),
+            String hql = "FROM Result r LEFT JOIN FETCH r.test t WHERE r.user.id = :userId";
+            return executeWithResult(session ->
+                            session.createQuery(hql, Result.class)
+                                    .setParameter("userId", id)
+                                    .list(),
                 "Failed to get results for user id: " + id
         );
     }
@@ -54,5 +54,16 @@ public class ResultDAOImpl extends GenericBaseDAOImpl<Result, UUID> implements R
                         session.createQuery(hql, Long.class).getSingleResult(),
                 "Failed to get result count"
         );
+    }
+
+    @Override
+    public List<Result> findAllWithDetails() {
+        return executeWithResult(session -> {
+            String hql = "SELECT r FROM Result r " +
+                    "LEFT JOIN FETCH r.user " +
+                    "LEFT JOIN FETCH r.test ";
+
+            return session.createQuery(hql, Result.class).getResultList();
+        }, "Failed to find all results with details");
     }
 }

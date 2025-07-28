@@ -29,7 +29,7 @@ public class Answer {
     private boolean correct;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     @ToString.Exclude
     private Question question;

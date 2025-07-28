@@ -12,6 +12,11 @@
     <div class="attempts-info">
         Total Attempts: <span class="attempts-number">${attempts}</span>
     </div>
+    <div class="main-menu-button">
+        <form action="/secure/menu" method="get">
+            <button type="submit" class="btn btn--primary">Return to Menu</button>
+        </form>
+    </div>
     <div class="table-container">
 
         <table id="testsTable">

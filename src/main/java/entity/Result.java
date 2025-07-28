@@ -3,6 +3,8 @@ package entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDateTime;
@@ -42,6 +44,7 @@ public class Result {
 
     @OneToMany(mappedBy = "result", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
+    @Fetch(FetchMode.SUBSELECT)
     private List<AnswersInResult> answersInResults;
 
     @Version

@@ -2,6 +2,8 @@ package entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.List;
@@ -28,6 +30,7 @@ public class AnswersInResult {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     @ToString.Exclude
+    @Fetch(FetchMode.JOIN)
     private Question question;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -36,6 +39,7 @@ public class AnswersInResult {
             joinColumns = @JoinColumn(name = "answers_in_result_id"),
             inverseJoinColumns = @JoinColumn(name = "answer_id")
     )
+    @Fetch(FetchMode.SUBSELECT)
     private List<Answer> selectedAnswers;
 
     @Override

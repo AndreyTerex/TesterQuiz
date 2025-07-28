@@ -3,7 +3,8 @@ package entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.SoftDelete;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -19,7 +20,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "tests")
 @SoftDelete
-@BatchSize(size = 10)
 public class Test {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -32,13 +32,13 @@ public class Test {
     private String topic;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
     @ToString.Exclude
     private User creator;
 
     @OneToMany(mappedBy = "test", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
-    @BatchSize(size = 30)
+    @Fetch(FetchMode.SUBSELECT)
     @ToString.Exclude
     private List<Question> questions;
 

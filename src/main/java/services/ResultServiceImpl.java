@@ -90,7 +90,7 @@ public class ResultServiceImpl implements ResultService {
     }
 
     public List<TestStatsDTO> getStats() {
-        List<Result> allResults = resultDao.findAll();
+        List<Result> allResults = resultDao.findAllWithDetails();
 
         Map<String, List<Result>> resultsByTitle = allResults.stream()
                 .collect(Collectors.groupingBy(Result::getTestTitle));

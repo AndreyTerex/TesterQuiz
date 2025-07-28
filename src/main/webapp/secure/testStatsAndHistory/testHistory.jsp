@@ -14,6 +14,11 @@
     <div class="page-header-centered">
         <h2 class="page-title">Test Results History</h2>
     </div>
+    <div class="main-menu-button">
+        <form action="/secure/menu" method="get">
+            <button type="submit" class="btn btn--primary">Return to Menu</button>
+        </form>
+    </div>
     <c:if test="${empty sessionScope.results}">
         <div class="alert alert--info">No results found.</div>
     </c:if>
@@ -55,11 +60,6 @@
             </tbody>
         </table>
     </c:if>
-    <div class="main-menu-button">
-        <form action="/secure/menu" method="get">
-            <button type="submit" class="btn btn--primary">Return to Menu</button>
-        </form>
-    </div>
     <div class="page-footer">
         <div class="footer">
             © 2025 TesterQuiz

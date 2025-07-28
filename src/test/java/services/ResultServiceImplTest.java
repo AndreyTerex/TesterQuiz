@@ -162,7 +162,7 @@ class ResultServiceImplTest {
         Question q = TestDataBuilders.question(new ArrayList<>(), 1);
         AnswersInResult air = TestDataBuilders.answersInResult(q, new ArrayList<>());
         result.setAnswersInResults(List.of(air));
-        when(resultDao.findAll()).thenReturn(List.of(result));
+        when(resultDao.findAllWithDetails()).thenReturn(List.of(result));
 
         // ACT
         List<TestStatsDTO> stats = resultService.getStats();

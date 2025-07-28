@@ -22,4 +22,6 @@ public interface ResultDAO extends GenericBaseDAO<Result,UUID> {
      * Finds a result by its ID, fetching associated details like user, test, and answers.
      */
     Optional<Result> findByIdWithDetails(UUID resultId);
+
+    List<Result> findAllWithDetails();
 }

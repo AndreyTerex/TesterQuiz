@@ -14,6 +14,11 @@
     <div class="page-header-centered">
         <h2 class="page-title">Test Result Details</h2>
     </div>
+    <div class="main-menu-button">
+        <form action="/secure/testStatsAndHistory/testHistory.jsp" method="get">
+            <button type="submit" class="btn btn--primary">Back to History</button>
+        </form>
+    </div>
     <c:if test="${empty result}">
         <div class="alert alert--info">No result data found.</div>
     </c:if>
@@ -66,11 +71,6 @@
             </div>
         </c:forEach>
     </c:if>
-    <div class="main-menu-button">
-        <form action="/secure/testStatsAndHistory/testHistory.jsp" method="get">
-            <button type="submit" class="btn btn--primary">Back to History</button>
-        </form>
-    </div>
     <div class="page-footer">
         <div class="footer">
             © 2025 TesterQuiz
