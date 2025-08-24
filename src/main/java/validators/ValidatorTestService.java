@@ -11,8 +11,8 @@ import java.util.UUID;
 
 public class ValidatorTestService extends ValidatorServiceBase  {
     public void validate(TestDTO testDTO) {
-        if(testDTO == null){
-            throw new ValidationException("User not found");
+        if (testDTO == null) {
+            throw new ValidationException("Test not found");
         }
         ValidatorUtil.validate(testDTO);
     }

@@ -2,15 +2,17 @@ package services;
 
 import dao.TestDAO;
 import dto.*;
-import entity.*;
+import entity.Question;
+import entity.Result;
+import entity.User;
 import exceptions.ValidationException;
 import mappers.QuestionMapper;
 import mappers.ResultMapper;
 import mappers.TestMapper;
 import mappers.UserMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -19,7 +21,10 @@ import validators.ValidatorTestRunnerService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -155,7 +160,7 @@ class TestRunnerServiceImplTest {
         TestProgressDTO progress = TestProgressDTO.builder()
                 .result(TestDataBuilders.resultDTO(UUID.randomUUID(), testId, new ArrayList<>()))
                 .question(q1)
-                .answers(new String[]{})
+                .answers(java.util.Collections.emptyList())
                 .build();
         // ACT
         TestProgressDTO result = testRunnerService.nextQuestion(progress);
@@ -186,7 +191,7 @@ class TestRunnerServiceImplTest {
         TestProgressDTO progress = TestProgressDTO.builder()
                 .result(TestDataBuilders.resultDTO(UUID.randomUUID(), testId, new ArrayList<>()))
                 .question(q1)
-                .answers(new String[]{})
+                .answers(java.util.Collections.emptyList())
                 .build();
         // ACT
         TestProgressDTO resultProgress = testRunnerService.nextQuestion(progress);

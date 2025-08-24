@@ -24,7 +24,7 @@ public class ValidatorTestRunnerService extends ValidatorServiceBase {
         if (test == null) {
             throw new ValidationException("Test not found");
         }
-        if (test.getQuestions().isEmpty()){
+        if (test.getQuestions() == null || test.getQuestions().isEmpty()) {
             throw new ValidationException("Test is empty");
         }
     }

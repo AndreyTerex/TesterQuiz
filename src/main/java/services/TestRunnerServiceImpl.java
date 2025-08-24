@@ -2,11 +2,14 @@ package services;
 
 import dao.TestDAO;
 import dto.*;
-import entity.*;
+import entity.Question;
+import entity.Result;
+import entity.Test;
+import entity.User;
+import exceptions.ValidationException;
 import mappers.QuestionMapper;
 import mappers.ResultMapper;
 import mappers.TestMapper;
-import exceptions.ValidationException;
 import mappers.UserMapper;
 import services.interfaces.ResultService;
 import services.interfaces.TestRunnerService;
@@ -14,7 +17,10 @@ import validators.ValidatorTestRunnerService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class TestRunnerServiceImpl implements TestRunnerService {
     private final TestDAO testDao;
@@ -70,7 +76,7 @@ public class TestRunnerServiceImpl implements TestRunnerService {
 
         ResultDTO resultDTO = testProgressDTO.getResult();
         QuestionDTO questionDTO = testProgressDTO.getQuestion();
-        String[] answers = testProgressDTO.getAnswers();
+        List<String> answers = testProgressDTO.getAnswers();
 
         Test test = testDao.findByIdWithDetails(resultDTO.getTestId()).orElseThrow(() -> new ValidationException("Test not found"));
         validatorTestRunnerService.validateTest(test);
@@ -111,7 +117,7 @@ public class TestRunnerServiceImpl implements TestRunnerService {
         }
     }
 
-    private AnswersInResultDTO buildAnswerInResult(QuestionDTO questionDTO, String[] answers) {
+    private AnswersInResultDTO buildAnswerInResult(QuestionDTO questionDTO, List<String> answers) {
         List<AnswerDTO> selectedAnswersList = new ArrayList<>();
         for (String selectedAnswer : answers) {
             UUID answerId = UUID.fromString(selectedAnswer);
